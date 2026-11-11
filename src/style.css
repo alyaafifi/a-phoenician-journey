@@ -1,0 +1,11 @@
+body {
+  margin: 1rem;
+  font-family: system-ui, sans-serif;
+}
+
+#scene {
+  display: block;
+  width: 100%;
+  height: 75vh;
+  touch-action: none;
+}

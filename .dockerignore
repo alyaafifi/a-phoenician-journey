@@ -1,0 +1,11 @@
+.git
+node_modules
+dist
+**/.DS_Store
+**/*.blend
+**/*.blend[0-9]*
+**/*.tsbuildinfo
+**/.env
+**/.env.*
+**/.npmrc
+**/*.log

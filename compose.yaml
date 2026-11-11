@@ -1,0 +1,31 @@
+services:
+  game:
+    build:
+      context: .
+      target: development
+    init: true
+    ports:
+      - "127.0.0.1:5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          initial_sync: true
+          ignore:
+            - package.json
+            - package-lock.json
+            - Dockerfile
+            - compose.yaml
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: package-lock.json
+
+  presentation:
+    profiles: ["presentation"]
+    build:
+      context: .
+      target: presentation
+    ports:
+      - "127.0.0.1:8080:8080"

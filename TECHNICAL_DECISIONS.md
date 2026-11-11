@@ -12,8 +12,10 @@
 
 The prototype is ready when a new player can find the dyer, use the letter to work out the order, and complete the shipment without help from the team. See [the game vision](GAME_VISION.md) for the workshop concepts and historical references.
 
-## Proposed developer setup
+## Developer setup
 
-Skip Docker for the prototype. Both programmers can use the same Node.js version and install from a shared npm lockfile. Once the app is initialized, record the Node.js version in `.nvmrc`, keep `package-lock.json` in Git, and use `npm ci` after cloning. This gives both machines the same dependency versions with minimal setup. The exact Node.js version is open.
+Both programmers use the Docker Compose development environment with live reload. The container and `.nvmrc` use the same Node.js version. Dependency installs use `npm ci` and the shared `package-lock.json`.
 
-Use a private GitHub repository named `a-phoenician-journey` for the team. Confirm the owner account or organization and repository visibility before creating the remote.
+The presentation container builds the game with Vite and serves the static output with unprivileged Nginx. Both services publish their ports on localhost.
+
+The team repository is [alyaafifi/a-phoenician-journey](https://github.com/alyaafifi/a-phoenician-journey).

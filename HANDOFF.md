@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Set up the Babylon.js Docker environment
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-11T10:55:12+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested Docker and explicitly approved both the development and presentation containers.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-11T10:58:47+01:00
+- **Purpose:** Give both programmers a reproducible environment for the two-half-day browser prototype and a way to verify the compiled presentation build.
+- **Changes:** `package.json`, `package-lock.json`, `tsconfig.json`, `index.html`, and `src/` define a TypeScript and Vite starter that renders a placeholder box with Babylon.js. `.nvmrc` and the Docker build use Node.js 24.22.2. `Dockerfile` installs locked dependencies with `npm ci`, runs Vite for development, and serves the compiled output in a separate unprivileged Nginx image. `compose.yaml` exposes development on localhost port 5173 and presentation on localhost port 8080. Compose Watch syncs edits and rebuilds on package file changes. `.dockerignore` excludes Git data, local dependencies, Blender source and backups, and local environment files. `README.md` and `TECHNICAL_DECISIONS.md` document both run modes.
+- **Decisions:** Keep the two modes in one Dockerfile with separate targets. Keep development dependencies in the build and development stages and copy only the static Vite output into the presentation stage. Pin npm package versions and preserve the lockfile so both programmers install the same dependencies.
+- **Verification:** `npm run build` and the Docker build passed. `npm audit` reported zero known dependency vulnerabilities. Chrome rendered the placeholder box from the compiled build. Both containers served the project on their localhost ports, and a temporary source edit reached the development server through Compose Watch. Verified on the local Apple Silicon Mac. Before committing, reran the build, checked the Compose configuration, and verified both HTTP endpoints. Vite reports a bundle size warning, and the build succeeds.
+- **Follow-up:** The harbor import, gameplay, and minigames are still to be built. The second programmer still needs to run the setup on their machine after it is available on GitHub.
+
 ### Document the pre-commit handoff workflow
 
 - **Status:** Ready for this commit
@@ -44,16 +59,3 @@
 - **Decisions:** Use one Markdown log with an entry in the same commit as the work it describes. Record the AI contributor separately from Git authorship. Use the commit subject and author timestamp to find the entry in history.
 - **Verification:** Checked the rules and template for attribution, time zone, technical detail, verification results, and how to handle pending work.
 - **Follow-up:** Use this workflow for the Docker environment commit and subsequent work.
-
-### Set up the Babylon.js Docker environment
-
-- **Status:** Pending
-- **Recorded at:** 2026-11-11T10:55:12+01:00
-- **Work by:** Codex
-- **Requested or approved by:** Project user requested Docker and explicitly approved both the development and presentation containers.
-- **Git author, committer, and author date:** Pending until this work is committed.
-- **Purpose:** Give both programmers a reproducible environment for the two-half-day browser prototype and a way to verify the compiled presentation build.
-- **Changes:** `package.json`, `package-lock.json`, `tsconfig.json`, `index.html`, and `src/` define a TypeScript and Vite starter that renders a placeholder box with Babylon.js. `.nvmrc` and the Docker build use Node.js 24.22.2. `Dockerfile` installs locked dependencies with `npm ci`, runs Vite for development, and serves the compiled output in a separate unprivileged Nginx image. `compose.yaml` exposes development on localhost port 5173 and presentation on localhost port 8080. Compose Watch syncs edits and rebuilds on package file changes. `.dockerignore` excludes Git data, local dependencies, Blender source and backups, and local environment files. `README.md` and `TECHNICAL_DECISIONS.md` document both run modes.
-- **Decisions:** Keep the two modes in one Dockerfile with separate targets. Keep development dependencies in the build and development stages and copy only the static Vite output into the presentation stage. Pin npm package versions and preserve the lockfile so both programmers install the same dependencies.
-- **Verification:** `npm run build` and the Docker build passed. `npm audit` reported zero known dependency vulnerabilities. Chrome rendered the placeholder box from the compiled build. Both containers served the project on their localhost ports, and a temporary source edit reached the development server through Compose Watch. Verified on the local Apple Silicon Mac.
-- **Follow-up:** The harbor import, gameplay, and minigames are still to be built. The second programmer still needs to run the setup on their machine after it is available on GitHub.
