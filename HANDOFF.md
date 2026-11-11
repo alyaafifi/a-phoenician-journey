@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Add the Sprint 1 harbor blockout and browser asset
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-11T11:38:14+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user, acting as Programmer A, approved the starter scene and asked to record, commit, and push the combined preview.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-11T11:38:14+01:00
+- **Purpose:** Give both programmers an editable Blender landing and make it load by default in the existing Babylon.js walk-through.
+- **Changes:** `art/sprint-1/harbor-landing.blend` is the editable scene and `art/sprint-1/harbor-landing.glb` is its direct export. The blockout contains the shore and ramp, sandstone shoulder, water, boat, three station proxies, a 1.7 m scale reference, and a spawn reference. `public/assets/harbor-landing.glb` is the browser-ready copy served at the loader's default URL.
+- **Decisions:** The Blender scene uses metres and opens in perspective with its waterline at Z = 0. The browser copy renames the spawn reference to `SPAWN` and rotates the export 90° around glTF Y so the camera faces the landing and sea along Babylon +Z. The browser starts at (0, 2.4, -17) in metres. The source and direct export retain their original orientation.
+- **Verification:** Reopened the scene in Blender, reimported the direct GLB, and checked its scale and waterline in Babylon.js. The local browser loaded the browser-ready GLB and reported the expected `SPAWN` and 2.4 m ground height. `npm run build` passed with the existing chunk-size warning, and the production output contains a byte-for-byte copy of the browser asset.
+- **Follow-up:** Both programmers still need to walk the route together and confirm ramp, collision, and station spacing. After Blender edits, regenerate the browser copy with the same orientation and spawn convention. The direct export alone uses different axes and a different spawn name.
+
 ### Add the Babylon.js landing walk-through and glTF import
 
 - **Status:** Ready for this commit
