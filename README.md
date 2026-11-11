@@ -9,7 +9,24 @@ Start Docker and run the following from the project directory.
 docker compose up --build --watch
 ```
 
-Open [the local game](http://localhost:5173). The starting scene renders a box so you can verify that Babylon.js works. Compose syncs source and asset edits and rebuilds when the dependency files change. Use `Ctrl+C` to stop, or `docker compose down` to remove the development container.
+Open [the local game](http://localhost:5173). The scene loads the harbor landing for a first-person walk-through. Compose syncs source and asset edits and rebuilds when the dependency files change. Use `Ctrl+C` to stop, or `docker compose down` to remove the development container.
+
+## Walk the harbor landing
+
+Click the scene to capture the mouse, or drag to look around. Use WASD or the arrow keys to walk and hold Shift to run. Press R to respawn, L to reload the Blender export, and P to show the placeholder primitives. Esc releases the mouse. The debug panel shows the feet position in Babylon.js and Blender coordinates, the ground height, and the size of the loaded landing.
+
+Place the Blender export at `public/assets/harbor-landing.glb`. If the file is missing, the scene shows placeholder primitives. To test another export, open `/?asset=/assets/<file>.glb` or drop a `.glb` file onto the page. Open `/?placeholder` to start with the primitives.
+
+Use one Blender unit per metre and put the waterline at Blender `Z = 0`. The scene uses glTF's right-handed, Y-up axes, so Blender `(x, y, z)` appears at Babylon.js `(x, z, -y)`. Name meshes in Blender as follows:
+
+| Name | Behavior |
+| --- | --- |
+| `COL_…` | Invisible collider, such as a wall or barrier |
+| `NOCOL_…` or a name containing `water` | Visible, no collision |
+| `SPAWN` (an empty) | Player feet position at load and respawn |
+| Any other mesh | Visible and collides |
+
+Spawn, speeds, slope limit, step height, and wading depth are in `src/landing/config.ts`.
 
 ## Run the presentation build
 
