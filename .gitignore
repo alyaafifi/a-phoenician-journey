@@ -147,3 +147,9 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# macOS metadata
+.DS_Store
+
+# Blender backup files
+*.blend[0-9]*
