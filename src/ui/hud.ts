@@ -21,7 +21,7 @@ export class Hud {
       <dl data-hud="landing"></dl>
       <dl data-hud="player"></dl>
       <p class="hud-help">
-        Click or drag to look around · WASD or arrows to walk · Shift to run · R respawn ·
+        Click or drag to look around · WASD or arrows to walk · Shift to run · E use station · R respawn ·
         L reload export · P placeholders · drop a .glb to swap · Esc releases mouse
       </p>`;
     this.status = root.querySelector<HTMLElement>('[data-hud="status"]')!;

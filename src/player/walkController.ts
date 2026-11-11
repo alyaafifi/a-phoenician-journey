@@ -46,6 +46,7 @@ export class WalkController {
   private groundY: number | null = null;
   private speed = 0;
   private spawnPoint = LANDING_CONFIG.spawn.clone();
+  private enabled = true;
 
   constructor(
     private readonly scene: Scene,
@@ -71,12 +72,13 @@ export class WalkController {
     this.camera.attachControl(canvas, true);
 
     canvas.addEventListener("click", () => {
-      if (document.pointerLockElement !== canvas) {
-        void canvas.requestPointerLock();
+      if (this.enabled && document.pointerLockElement !== canvas) {
+        // Some embedded browsers refuse pointer lock; dragging still turns the camera.
+        void canvas.requestPointerLock()?.catch?.(() => undefined);
       }
     });
     window.addEventListener("keydown", (event) => {
-      if (event.code in MOVE_KEYS || event.code.startsWith("Shift")) {
+      if (this.enabled && (event.code in MOVE_KEYS || event.code.startsWith("Shift"))) {
         this.pressed.add(event.code);
         event.preventDefault();
       }
@@ -90,6 +92,27 @@ export class WalkController {
 
   get state(): WalkState {
     return { feet: this.body.position, grounded: this.grounded, groundY: this.groundY, speed: this.speed };
+  }
+
+  /**
+   * Pauses walking and mouse look, for example while a 2D screen is open. Gravity keeps
+   * running so the player stays on the ground.
+   */
+  setEnabled(enabled: boolean): void {
+    if (enabled === this.enabled) {
+      return;
+    }
+    this.enabled = enabled;
+    this.pressed.clear();
+    const canvas = this.scene.getEngine().getRenderingCanvas();
+    if (enabled && canvas) {
+      this.camera.attachControl(canvas, true);
+    } else {
+      this.camera.detachControl();
+      if (document.pointerLockElement) {
+        document.exitPointerLock();
+      }
+    }
   }
 
   /** Sets where `respawn()` places the player, such as the export's `SPAWN` node. */

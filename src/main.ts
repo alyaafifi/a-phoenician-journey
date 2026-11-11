@@ -12,14 +12,18 @@ import { LANDING_CONFIG } from "./landing/config";
 import { loadGltfLanding, MissingAssetError } from "./landing/gltfLanding";
 import type { Landing } from "./landing/landing";
 import { createPlaceholderLanding, createScaleMarker } from "./landing/placeholderLanding";
+import { stationInReach, type StationId } from "./landing/stations";
 import { WalkController } from "./player/walkController";
+import { CargoScreen } from "./trade/cargoScreen";
+import { tradeState } from "./trade/tradeState";
 import { Hud } from "./ui/hud";
 import "./style.css";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#scene");
 const hudRoot = document.querySelector<HTMLElement>("#hud");
-if (!canvas || !hudRoot) {
-  throw new Error("The scene canvas or HUD is missing.");
+const promptRoot = document.querySelector<HTMLElement>("#prompt");
+if (!canvas || !hudRoot || !promptRoot) {
+  throw new Error("The scene canvas, HUD, or prompt is missing.");
 }
 
 // The glTF loader is fetched on demand the first time an export is loaded.
@@ -39,12 +43,13 @@ const sun = new DirectionalLight("sun_light", new Vector3(-0.4, -1, 0.5), scene)
 sun.intensity = 0.8;
 
 if (import.meta.env.DEV) {
-  // Lets the browser console inspect the scene during development, such as `scene.meshes`.
-  Object.assign(window, { scene });
+  // Lets the browser console inspect the scene and trade state during development.
+  Object.assign(window, { scene, tradeState });
 }
 
 const hud = new Hud(hudRoot);
 const player = new WalkController(scene, canvas);
+const cargoScreen = new CargoScreen(document.body, tradeState);
 
 const params = new URLSearchParams(window.location.search);
 const assetUrl = params.get("asset") ?? LANDING_CONFIG.defaultAssetUrl;
@@ -112,11 +117,62 @@ async function loadExport(source: string | File): Promise<void> {
   }
 }
 
+// Station actions. Programmer A replaces the dye entry with the dye minigame launcher.
+// While the minigame is being built, the dye stall gives a mock result in development
+// builds or with `?mockDye`, so the shipment can be tested end to end.
+const allowMockDye = import.meta.env.DEV || params.has("mockDye");
+const stationActions: Partial<Record<StationId, { prompt: () => string; run: () => void }>> = {
+  cargo: {
+    prompt: () => (tradeState.shipmentSent ? "Press E to see the shipment" : "Press E to load the ship"),
+    run: () => {
+      player.setEnabled(false);
+      cargoScreen.open(() => {
+        player.setEnabled(true);
+        canvas.focus();
+      });
+    },
+  },
+  dye: {
+    prompt: () =>
+      tradeState.dyeTaskComplete
+        ? "The purple cloth is ready on the landing"
+        : allowMockDye
+          ? "Press E to dye a swatch (mock result)"
+          : "The dye task is coming in Sprint 2",
+    run: () => {
+      if (allowMockDye && tradeState.completeDyeTask()) {
+        hud.setStatus("Mock dye result: the purple cloth is ready to ship.");
+      }
+    },
+  },
+};
+
+let nearbyStation: StationId | null = null;
+
+const updateStationPrompt = (): void => {
+  const station =
+    landing && !cargoScreen.isOpen
+      ? stationInReach(landing.stations, player.state.feet, (id) => stationActions[id] !== undefined)
+      : null;
+  nearbyStation = station?.id ?? null;
+  const text = nearbyStation ? (stationActions[nearbyStation]?.prompt() ?? "") : "";
+  if (promptRoot.textContent !== text) {
+    promptRoot.textContent = text;
+    promptRoot.hidden = text === "";
+  }
+};
+
 window.addEventListener("keydown", (event) => {
-  if (event.repeat) {
+  if (event.repeat || cargoScreen.isOpen) {
     return;
   }
   switch (event.code) {
+    case "KeyE":
+      if (nearbyStation) {
+        stationActions[nearbyStation]?.run();
+        updateStationPrompt();
+      }
+      break;
     case "KeyR":
       player.respawn();
       break;
@@ -152,6 +208,7 @@ if (params.has("placeholder")) {
 
 let hudTimer = 0;
 scene.onAfterRenderObservable.add(() => {
+  updateStationPrompt();
   hudTimer += engine.getDeltaTime();
   if (hudTimer >= 100) {
     hudTimer = 0;

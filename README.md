@@ -25,8 +25,20 @@ Use one Blender unit per metre and put the waterline at Blender `Z = 0`. The sce
 | `NOCOL_…` or a name containing `water` | Visible, no collision |
 | `SPAWN` (an empty) | Player feet position at load and respawn |
 | Any other mesh | Visible and collides |
+| Name containing `cargo`, `dye`, or `scribe` | Marks that station's footprint, in addition to the rules above |
 
 Spawn, speeds, slope limit, step height, and wading depth are in `src/landing/config.ts`.
+
+## Play the trade loop
+
+Walk to a station and press E when the prompt appears.
+
+1. **Dye stall** · The minigame is in progress. Development builds give a mock result here that makes the purple cloth ready. For the presentation build, add `?mockDye` to the URL to get the same mock.
+2. **Cargo station** · Read the shipping letter, set the quantity and destination for each good, select a good and click its place in the ship's hold, then send the ship. The dockworker points to the letter line to fix. Esc or **Back to the harbor** closes the screen.
+
+The order, goods, routes, and hold positions are in `src/trade/`. The sources and reconstruction choices behind them are in [the cargo research](CARGO_RESEARCH.md). The dye minigame reports its result with `tradeState.completeDyeTask()` from `src/trade/tradeState.ts`.
+
+Run the unit tests with `npm test`.
 
 ## Run the presentation build
 

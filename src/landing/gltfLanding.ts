@@ -3,6 +3,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import type { Scene } from "@babylonjs/core/scene";
 import { NAMING } from "./config";
 import { applyCollisionRole, computeBounds, type Landing } from "./landing";
+import { findStations } from "./stations";
 
 const GLB_MAGIC = 0x46546c67; // "glTF" in little-endian
 
@@ -58,6 +59,7 @@ export async function loadGltfLanding(scene: Scene, source: string | File): Prom
   return {
     label,
     spawn,
+    stations: findStations(container.meshes),
     boundsMin: bounds.min,
     boundsMax: bounds.max,
     dispose: () => {

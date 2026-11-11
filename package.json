@@ -10,7 +10,8 @@
     "dev": "vite --strictPort",
     "typecheck": "tsc --noEmit",
     "build": "npm run typecheck && vite build",
-    "preview": "vite preview --strictPort"
+    "preview": "vite preview --strictPort",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@babylonjs/core": "9.35.0",

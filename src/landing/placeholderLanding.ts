@@ -11,6 +11,7 @@ import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import type { Scene } from "@babylonjs/core/scene";
 import { LANDING_CONFIG } from "./config";
 import { applyCollisionRole, computeBounds, type Landing } from "./landing";
+import { findStations } from "./stations";
 
 /**
  * Ground profile along Babylon Z, as [z, height] points. Land rises toward -Z and
@@ -162,6 +163,7 @@ export function createPlaceholderLanding(scene: Scene): Landing {
 
   return {
     label: "Placeholder primitives",
+    stations: findStations(meshes),
     boundsMin: bounds.min,
     boundsMax: bounds.max,
     dispose: () => root.dispose(false, true),

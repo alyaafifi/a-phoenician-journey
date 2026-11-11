@@ -1,6 +1,7 @@
 import type { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { NAMING } from "./config";
+import type { Station } from "./stations";
 
 /** A loaded harbor landing: either the placeholder primitives or a Blender export. */
 export interface Landing {
@@ -8,6 +9,8 @@ export interface Landing {
   readonly label: string;
   /** Feet spawn position from the export, if it defines one. */
   readonly spawn?: Vector3;
+  /** Station footprints found by mesh name. */
+  readonly stations: readonly Station[];
   /** World-space bounds of the visible geometry. */
   readonly boundsMin: Vector3;
   readonly boundsMax: Vector3;

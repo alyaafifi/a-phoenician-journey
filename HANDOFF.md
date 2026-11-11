@@ -31,6 +31,61 @@
 
 ## Entries
 
+### Add the Sprint 2 shipping order and cargo loop
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-11T13:31:35+02:00
+- **Work by:** alyaafifi (Programmer B, Sprint 2 shipping order and cargo track) with Claude Code (Claude Opus 5.5)
+- **Requested or approved by:** alyaafifi requested the Programmer B part of `SPRINT_2.md` and this handoff entry, and authorized the commit and push.
+- **Git author:** alyaafifi
+- **Git committer:** alyaafifi
+- **Git author date:** 2026-11-11T13:31:35+02:00
+- **Purpose:** Deliver the Programmer B track of Sprint 2. This covers sourced routes and stowage for purple cloth and wine, a sample order with two goods and two destinations, and a cargo screen. On that screen the player sets the quantity and destination for each good and assigns its place in the hold, and the dockworker points to the letter line to fix.
+- **Changes:**
+  - `CARGO_RESEARCH.md` is the product table for review with Programmer A. For each good it gives the proposed route and destination, the stowage position, sources and dates, and whether the evidence establishes the fact, provides a regional comparison, or is reconstructed. It also explains the hold layout and records limits and open questions.
+    - Purple cloth goes to Kition (Cyprus) and is stowed in the dry locker at the stern. Sources: RINAP 1 Tiglath-pileser III 32 (Byblos tribute with multicoloured garments and purple wool), Livius on Kition (Tyrian resettlement in the second half of the 9th c. BCE), and Mazarrón 2 (esparto pannier and filler).
+    - Wine goes to Egypt (Nile Delta) and is stowed in the jar bay amidships. Sources: the Ashkelon wrecks, *AJA* 2002 (wine "destined for either Egypt or Carthage"), with WHOI and OXREP, plus Mazarrón 2 (filler and esparto rope).
+  - `src/trade/catalog.ts` defines the goods, destinations with route text, and the two hold positions.
+  - `src/trade/shipment.ts` holds the sample order, with quantity, destination, and stowage on each line. `checkShipment()` returns the first problem on each line, in letter order: availability, then quantity, destination, and stowage. It marks whether a value is missing or wrong.
+  - `src/trade/tradeState.ts` is the shared trade state and the dye-to-cargo contract. `completeDyeTask()` unlocks a prepared batch of 4 cloth bundles exactly once. An unfinished attempt leaves the cloth unavailable, and repeating a completed attempt doesn't duplicate cargo. Six wine jars are staged. `markShipmentSent()` records the shipment once.
+  - `src/trade/cargoScreen.ts` is the 2D cargo dialog. It shows the letter, a card per good (stock, quantity stepper, destination choice, stowage status), and a ship diagram with stern, dry locker, jar bay and bow. You click a good, then a hold position, to place it. The dockworker message highlights the letter line to fix. A sent screen shows the routes and an evidence note. The dialog uses buttons, ARIA roles and labels, keyboard focus, and Esc to close.
+  - `src/landing/stations.ts` finds station footprints by mesh name (`cargo`, `dye`, `scribe`) in both the Blender export and the placeholders, and finds the closest station within 1.5 m of the player's feet. `Landing` now exposes `stations`.
+  - `src/main.ts` adds an E-key prompt and actions for stations. The cargo station opens the cargo screen. The dye stall gives a mock dye result in development builds or with `?mockDye`, until Programmer A's minigame replaces that entry. Station keys are ignored while the screen is open, and `tradeState` is exposed in development.
+  - `src/player/walkController.ts` adds `setEnabled()` to pause walking and mouse look and release pointer lock while the screen is open. Pointer lock failures are now ignored.
+  - `index.html`, `src/style.css`, and `src/ui/hud.ts` add the prompt element, the cargo screen styles, and E in the controls help.
+  - `tests/trade.test.mjs` and `package.json` (`npm test`, using Node's built-in test runner on the type-stripped trade modules) add 12 tests for the order rules and the dye contract.
+  - `README.md` documents the trade loop, station naming, the mock, and the tests.
+- **Decisions:**
+  - Stowage and destination are specified in the plain-language letter, so each wrong choice traces back to one line. The dockworker reports one problem at a time and names the line without giving the answer.
+  - Proposed kickoff contract: one completed swatch unlocks a prepared batch. This avoids repeating the dye task for each bundle. Programmer A still needs to confirm it.
+  - The destination is "Egypt (Nile Delta)" and not a named harbour, because no source here names the Delta port.
+  - The trade logic stays free of DOM and Babylon.js so it can be tested without a browser or build step.
+  - Clicking a good always selects it and never toggles it off. An earlier version auto-selected the flagged good, so the player's next click deselected it and the hold click did nothing.
+- **Verification:**
+  - `npm run typecheck` and `npm run build` passed. Vite still shows the existing bundle size warning. `npm test` passed 12 of 12 tests.
+  - In the Claude desktop browser pane, against the dev server with Programmer A's `harbor-landing.glb`, I walked from the spawn to the cargo footprint and saw the "Press E to load the ship" prompt.
+    - With no dye result, sending the shipment flagged line 1 with the dye stall message.
+    - At the dye stall, the mock unlocked 4 bundles. Pressing E again did not add more.
+    - Wrong quantity, missing or wrong destination, and missing or wrong stowage each flagged the correct line. The wine stepper stopped at 6.
+    - The correct shipment showed the sent screen. Reopening the screen showed the sent state, and Esc closed it.
+    - W did not move the player while the screen was open, and walking resumed after closing.
+    - Fixed a horizontal overflow at about 680 px wide caused by panel padding.
+  - Gaps: tested with local Node 22.19 and the running dev server, not the presentation container. Not tested with a screen reader or on a touch device. The full text of the Ashkelon article was not available, only its abstract.
+- **Technical skills needed to continue this work:**
+  - Historical research method: telling primary sources (Assyrian royal inscriptions in RINAP/ORACC, excavation reports, museum records) from secondary summaries; dating sources; labelling claims as established, regional comparison, or reconstruction; and citing them accessibly.
+  - TypeScript with strict typing: union types, `Record` maps, readonly data, and erasable-only syntax so Node can strip the types for tests.
+  - Building UI with the DOM API without a framework: creating elements, event handling, re-rendering while keeping focus, and dialog accessibility (ARIA roles, `aria-pressed` and `aria-checked`, focus management, Esc to close).
+  - CSS layout: Grid and Flexbox, `box-sizing`, responsive breakpoints, and custom properties.
+  - Babylon.js: reading mesh names and world bounding boxes from a glTF `AssetContainer`, render-loop observers, and pausing camera input with `attachControl` and `detachControl`.
+  - Game state design: a small observable store, idempotent state changes, and an explicit contract between minigames.
+  - Testing: `node:test` and `node:assert`, testing pure functions, and browser checks driven by scripted key events.
+  - Git and the handoff workflow, plus coordinating interface contracts with another programmer.
+- **Follow-up:**
+  - Review `CARGO_RESEARCH.md` with Programmer A, and confirm both routes, both stowage positions, and the batch size of 4.
+  - Programmer A replaces the `dye` entry in `stationActions` in `src/main.ts` with the minigame launcher and calls `tradeState.completeDyeTask()` on success.
+  - Read the full Ashkelon article before modelling the 3D hold.
+  - Later sprints: letter delivery timing, the Phoenician sign exercise, a packing grid, and touch controls.
+
 ### Document the Sprint 2 trade loop and harbor art brief
 
 - **Status:** Ready for this commit
