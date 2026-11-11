@@ -31,6 +31,59 @@
 
 ## Entries
 
+### Port the harbor and cargo loop to Unity
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-11T16:14:02+02:00
+- **Work by:** alyaafifi (Programmer B) with Claude Code (Claude Opus 5.5)
+- **Requested or approved by:** alyaafifi decided to move the prototype from Babylon.js to Unity, asked for `UNITY_MIGRATION.md` so Programmer A is up to date, and authorized the commit and push after the project compiled and its tests passed.
+- **Git author:** alyaafifi
+- **Git committer:** alyaafifi
+- **Git author date:** 2026-11-11T16:14:02+02:00
+- **Purpose:** Switch the game engine to Unity, keep everything Sprint 1 and Sprint 2 delivered, and give Programmer A a clear path to set up and continue in Unity.
+- **Changes:**
+  - `unity/` is a new Unity 6.6 (6000.6.8f1) project. Its packages are glTFast 6.21.0, Input System 1.20.1, Test Framework 1.8.0, uGUI, and the IDE integrations. The project uses the Input System only (`activeInputHandler: 1`), and analytics and performance reporting are off.
+  - `Assets/Scripts/Trade/` (`TradeCatalog.cs`, `Shipment.cs`, `TradeState.cs`) is a line-by-line C# port of the goods, destinations, hold positions, sample order, `Check()` rules, dockworker messages, and the dye-to-cargo contract. `TradeState.Shared` resets when play starts.
+  - `Assets/Scripts/Landing/` holds `LandingNaming.cs`, the unchanged Blender convention (`COL_`, `NOCOL_`/`water`, `SPAWN`, `cargo`/`dye`/`scribe`), and `Station.cs`, a footprint component with a cached bounds and a reach of 1.5 m.
+  - `Assets/Scripts/Player/FirstPersonWalker.cs` is first-person movement on a `CharacterController`, using the prototype's values: 1.7 m body, 1.6 m eye, 0.35 m step, 40° slope limit, 2.2 and 5 m/s, wading limit at −0.5 m, and respawn below −10 m. You look around with the cursor captured, or by dragging. `SetMovementEnabled()` pauses movement and frees the cursor.
+  - `Assets/Scripts/UI/CargoScreen.cs` and `Assets/UI/Harbor.uss` rebuild the cargo screen in UI Toolkit: the letter with the flagged line, goods cards, the stern and amidships hold diagram, dockworker feedback, the sent summary, and the evidence note. Its public actions double as test hooks. `HarborTheme.tss` imports the default runtime theme.
+  - `Assets/Scripts/HarborGame.cs` runs the HUD, station prompts, E and R keys, and station actions. The dye mock runs in the editor, in development builds, or with `mockDye` in the URL.
+  - `Assets/Editor/HarborSceneBuilder.cs` (**Tools ▸ Phoenician Journey ▸ Rebuild Harbor Scene**) generates `Assets/Scenes/Harbor.unity` from `Assets/Art/harbor-landing.glb`, a Git LFS copy of the Sprint 1 browser export. It adds mesh colliders by name, hides `COL_` meshes, adds stations, places the player at `SPAWN` facing the cargo station, and sets up lighting and UI. It also sets the build scene list and baked collision meshes.
+  - `Assets/Editor/BuildScript.cs` adds **Build Windows** (Mono, `Builds/Windows/APhoenicianJourney.exe`) and **Build Web** (Gzip with decompression fallback).
+  - `Assets/Tests/` has 23 edit-mode tests (the 12 ported trade tests plus dockworker wording and naming) and 3 play-mode tests: grounded at spawn, stations found, and the full loop.
+  - `unity/.gitignore` excludes `Library`, `Temp`, `Logs`, `UserSettings`, `Builds`, and IDE files. The root `.gitattributes` adds Unity Smart Merge for `.unity`, `.prefab`, and `.asset` files, and Git LFS for new binary art, audio, and fonts. Files committed earlier are unchanged.
+  - `UNITY_MIGRATION.md` covers status, machine setup (Unity version, Git LFS, Smart Merge), layout, the Blender-to-Unity workflow, the dye minigame contract in C#, file ownership, run, test and build steps, a mapping from each prototype file to its Unity replacement, technical choices, and open items. `TECHNICAL_DECISIONS.md` and `README.md` now describe Unity as the current stack, with the Babylon.js prototype being retired.
+- **Decisions:**
+  - Unity 6.6 instead of 6.3 LTS, because 6.6 was already downloaded and the code uses nothing that differs between them. All teammates must use 6000.6.8f1.
+  - A Windows build instead of a web build, because this machine had too little disk space for Web Build Support (5.6 GB). The web build stays available in the build script.
+  - The harbor scene is generated, not hand-edited, so a new Blender export only needs a rebuild and nobody merges scene files.
+  - The built-in render pipeline and the Mono backend keep the setup small.
+  - Removed Unity's default extras: Analytics, In-App Purchasing, Version Control, Multiplayer Center, XR legacy input, 2D Sprite/Tilemap, AI Navigation, and Timeline, along with the purchasing leftover `Assets/Resources/BillingMode.json`.
+  - The Babylon.js code stays in this commit, so the old build still runs until Programmer A has moved over.
+- **Verification:**
+  - Batch-mode compile on Windows 11 with Unity 6000.6.8f1 had no errors or warnings, after fixing two Unity 6.6 deprecations.
+  - Rebuilding the scene reported 7 solid meshes, 0 hidden colliders, 1 mesh without collision, and 3 stations, with the spawn at (0.00, 2.40, −17.00) facing 351°.
+  - Edit-mode tests passed 23/23 and play-mode tests passed 3/3, both before and after removing the default packages. One test failed at first because NUnit's `Has.Count` doesn't work on arrays; I fixed it.
+  - The Windows build succeeded at 95.4 MB, after retrying an internal build-system error caused by a leftover backend process. The built `.exe` ran for 15 seconds with no errors in its player log.
+  - Gaps: I didn't play by hand with keyboard and mouse, so the look sensitivity, walking feel and cargo-screen layout are only checked by code and the log. The web build and macOS weren't tested.
+- **Technical skills needed to continue this work:**
+  - Unity: the editor, Unity Hub version management, scenes and GameObjects, components and `MonoBehaviour` lifecycle, the Inspector, prefabs, packages and `manifest.json`, assembly definitions, Player settings, and building for Windows and Web.
+  - C#: classes and enums, nullable value types, events, LINQ, collections, and `readonly` and `const`.
+  - Unity physics and movement: `CharacterController` (step offset, slope limit, `Move`), `MeshCollider`, bounds, and frame-rate-independent movement with `Time.deltaTime`.
+  - Unity Input System: `Keyboard.current` and `Mouse.current`, cursor lock, and active input handling.
+  - UI Toolkit: `UIDocument`, `PanelSettings`, theme style sheets, building VisualElements in code, USS styling (flexbox, with no CSS grid), focus, and `SetEnabled`.
+  - glTF and Blender: glTFast import, node naming, metres and Y-up, and re-exporting `.glb`.
+  - Editor scripting: `MenuItem`, `EditorSceneManager`, `AssetDatabase`, `PrefabUtility`, `BuildPipeline`, and batch-mode `-executeMethod`.
+  - Testing: the Unity Test Framework (NUnit, edit-mode and play-mode, `UnityTest` coroutines) and command-line `-runTests` with XML results.
+  - Git for Unity: `.meta` files, `.gitignore`, Git LFS, Unity Smart Merge, and file ownership to avoid scene conflicts.
+- **Follow-up:**
+  - Programmer A sets up Unity 6000.6.8f1, Git LFS, and Smart Merge (see `UNITY_MIGRATION.md`), opens `unity/`, and builds the dye minigame against `TradeState.Shared.CompleteDyeTask()`.
+  - Play-test by hand in the editor and tune the look sensitivity.
+  - Confirm the presentation device's operating system.
+  - Remove the Babylon.js code and Docker setup in a later commit, once both programmers work in Unity.
+  - Confirm the cloth batch size, routes, and stowage from `CARGO_RESEARCH.md`.
+  - Disk space on this machine is low, at about 1.7 GB free.
+
 ### Add the Sprint 2 shipping order and cargo loop
 
 - **Status:** Ready for this commit

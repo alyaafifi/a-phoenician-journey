@@ -1,0 +1,14 @@
+{
+    "name": "PhoenicianJourney.Editor",
+    "rootNamespace": "PhoenicianJourney.Editor",
+    "references": [
+        "PhoenicianJourney"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "autoReferenced": true,
+    "noEngineReferences": false
+}

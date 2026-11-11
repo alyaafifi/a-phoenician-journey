@@ -1,6 +1,21 @@
 # a-phoenician-journey
 BIP Project - Byblos
 
+## Unity (current)
+
+The game is moving to Unity. Install **Unity 6.6 (6000.6.8f1)** with Unity Hub and run `git lfs install` once. Then add the `unity/` folder in Unity Hub, open `Assets/Scenes/Harbor.unity`, and press Play.
+
+- **Controls** · Click or drag to look, WASD or the arrow keys to walk, Shift to run, E to use a station, R to respawn, and Esc to free the mouse.
+- **Tests** · Open **Window ▸ General ▸ Test Runner** and run the EditMode and PlayMode tests.
+- **New Blender export** · Save it as `unity/Assets/Art/harbor-landing.glb`, then run **Tools ▸ Phoenician Journey ▸ Rebuild Harbor Scene**.
+- **Windows build** · Run **Tools ▸ Phoenician Journey ▸ Build Windows**. It writes `unity/Builds/Windows/APhoenicianJourney.exe`.
+
+Setup, workflow, and file ownership are in [the Unity migration](UNITY_MIGRATION.md).
+
+## Babylon.js prototype (being retired)
+
+The sections below describe the earlier browser prototype. It still runs, but new work goes into Unity.
+
 ## Run the development environment
 
 Start Docker and run the following from the project directory.
