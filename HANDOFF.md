@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Plan parallel work for the harbor landing blockout
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-11T11:11:32+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested the two-programmer Sprint 1 plan, handoff update, commit, and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-11T11:11:32+01:00
+- **Purpose:** Let both programmers start the harbor landing blockout in the same half-day.
+- **Changes:** `SPRINT_1.md` defines parallel Blender and Babylon.js work, a shared scale and asset handoff, and browser acceptance checks. This commit contains planning documentation.
+- **Decisions:** Use one short section of shore as the first integration target. The browser track starts with primitives while the Blender track prepares the first export. Both tracks meet at a midpoint walk-through so slope and spacing can be adjusted early.
+- **Verification:** Reviewed the plan against the approved Blender-to-Babylon.js handoff and the landing blockout scope. Checked the staged diff for scope and whitespace. The browser checks are Sprint 1 deliverables.
+- **Follow-up:** Assign the two tracks and agree on the asset path, spawn position, and approach direction at kickoff. Extend the bay after the landing passes the joint browser check.
+
 ### Set up the Babylon.js Docker environment
 
 - **Status:** Ready for this commit
