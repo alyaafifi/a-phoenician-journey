@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Document the Sprint 2 trade loop and harbor art brief
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-11T12:13:30+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested the sourced art brief, the Sprint 2 plan, and the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-11T12:13:30+01:00
+- **Purpose:** Let both programmers start the trade loop in parallel while the 3D designer extends the bay.
+- **Changes:** `SPRINT_2.md` assigns the purple-dye minigame to Programmer A and route and stowage research and cargo interactions to Programmer B. It links to `HARBOR_ART_BRIEF.md`, which documents the Byblos evidence, landscape build order, recommended visual style, asset references, and Blender-to-browser handoff.
+- **Decisions:** Use one sample order with two goods and two destination choices. Give each product a route entry and a designated place aboard with a simple click target. The art brief recommends a sandy working landing and grounded low-poly art, and identifies documented features, regional comparisons, and design choices.
+- **Verification:** Checked both documents' local links, reviewed the sprint plan against the game vision and technical decisions, and checked the staged scope and whitespace. This commit contains documentation.
+- **Follow-up:** Complete the joint Sprint 1 walk-through, agree on the dye-to-cargo handoff, and review the route and stowage evidence before finalizing the sample order.
+
 ### Add the Sprint 1 harbor blockout and browser asset
 
 - **Status:** Ready for this commit
