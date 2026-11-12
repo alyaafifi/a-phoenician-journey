@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using PhoenicianJourney.Audio;
 using PhoenicianJourney.Trade;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -20,6 +21,7 @@ namespace PhoenicianJourney.UI
         private CargoScreen cargo;
         private Coroutine transition;
         private Texture2D blurredFrame;
+        private StoryAudio storyAudio;
         private TradeState trade;
         private bool cedarRepaired;
 
@@ -27,6 +29,11 @@ namespace PhoenicianJourney.UI
         {
             trade = new TradeState();
             cedarRepaired = false;
+            storyAudio = GetComponent<StoryAudio>();
+            if (storyAudio == null)
+            {
+                storyAudio = gameObject.AddComponent<StoryAudio>();
+            }
             var root = GetComponent<UIDocument>().rootVisualElement;
             root.Clear();
             root.styleSheets.Add(styles);
@@ -61,27 +68,45 @@ namespace PhoenicianJourney.UI
             frame.style.height = width / FrameAspect;
         }
 
-        private void ShowTitle() =>
+        private void ShowTitle()
+        {
+            storyAudio.StopAll();
             ShowCard("title", null, null, "Begin", ShowMenu, "Skip to harbor", ShowHarbor);
+        }
 
-        private void ShowMenu() =>
+        private void ShowMenu()
+        {
+            storyAudio.StopAll();
             ShowCard("menu", null, null, "Start story", ShowClassroom, "Back to title", ShowTitle);
+        }
 
-        private void ShowClassroom() =>
+        private void ShowClassroom()
+        {
+            storyAudio.StartClassroomAmbience();
             ShowCard("classroom", "History class", "The teacher has been talking about the Phoenicians for a while.", "Continue", ShowTeacher);
+        }
 
-        private void ShowTeacher() =>
+        // The spoken lines match this text. Regenerate the audio (AUDIO_CUES.md) if it changes.
+        private void ShowTeacher()
+        {
+            storyAudio.PlayTeacher("teacher-1");
             ShowCard("teacher", "Teacher",
                 "Now, back to Byblos. They shipped cedar, traded cloth, and sailed as far as Cyprus. We’ll get to Cyprus in a minute. First, the timber…",
                 "Continue", ShowDrowsy);
+        }
 
-        private void ShowDrowsy() =>
+        private void ShowDrowsy()
+        {
+            storyAudio.PlayTeacher("teacher-2");
             ShowCard("teacher", "Teacher",
                 "So where were we? Right. Once the timber reached the harbor, someone still had to load the ship. Now, if you look at the diagram…",
                 "Your eyes close", () => transition = StartCoroutine(FallAsleepAndWake()));
+        }
 
         private IEnumerator FallAsleepAndWake()
         {
+            // The yawn, then the classroom muffles to silence over the eyelids and blackout (1.1 + 1 + 0.8 s).
+            storyAudio.FallAsleep(2.9f);
             SetFrame("eyes-half");
             yield return new WaitForSecondsRealtime(1.1f);
             SetFrame("eyes-shut");

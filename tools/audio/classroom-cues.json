@@ -1,0 +1,61 @@
+{
+  "description": "Classroom audio for the Harbor2D story. Generate with: node tools/audio/generate-elevenlabs.mjs tools/audio/classroom-cues.json",
+  "outputDir": "unity/Assets/Resources/Audio/Classroom",
+  "outputFormat": "pcm_24000",
+  "sfxOutputFormat": "pcm_48000",
+  "voices": {
+    "teacher": {
+      "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
+      "note": "Alice (British, middle-aged educator), pushed flat and slow with the settings below. List other voices with: node tools/audio/generate-elevenlabs.mjs --list-voices",
+      "modelId": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.95,
+        "similarity_boost": 0.7,
+        "style": 0,
+        "use_speaker_boost": false,
+        "speed": 0.85
+      }
+    }
+  },
+  "cues": [
+    {
+      "id": "teacher-1",
+      "type": "speech",
+      "voice": "teacher",
+      "text": "Now, back to Byblos. They shipped cedar, traded cloth, and sailed as far as Cyprus. We'll get to Cyprus in a minute. First, the timber..."
+    },
+    {
+      "id": "teacher-2",
+      "type": "speech",
+      "voice": "teacher",
+      "text": "So where were we? Right. Once the timber reached the harbor, someone still had to load the ship. Now, if you look at the diagram..."
+    },
+    {
+      "id": "clock",
+      "type": "sfx",
+      "loop": true,
+      "durationSeconds": 10,
+      "promptInfluence": 0.6,
+      "text": "Old analog wall clock ticking steadily, one tick per second, in a quiet classroom, close and clear, no voices, no music",
+      "normalizePeak": 0.7
+    },
+    {
+      "id": "traffic",
+      "type": "sfx",
+      "loop": true,
+      "durationSeconds": 15,
+      "promptInfluence": 0.5,
+      "text": "Faint distant city traffic heard through a closed classroom window, soft cars passing now and then, no horns, no voices, no music",
+      "normalizePeak": 0.7
+    },
+    {
+      "id": "yawn",
+      "type": "sfx",
+      "loop": false,
+      "durationSeconds": 3,
+      "promptInfluence": 0.7,
+      "text": "A single long sleepy yawn from a teenage boy, close to the listener, indoors, no other sounds",
+      "normalizePeak": 0.8
+    }
+  ]
+}

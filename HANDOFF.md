@@ -31,6 +31,57 @@
 
 ## Entries
 
+### Add ElevenLabs classroom audio to the 2D story
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T14:09:02+02:00
+- **Work by:** alyaafifi (Programmer B) with Claude Code (Claude Opus 5.5)
+- **Requested or approved by:** alyaafifi asked for classroom audio from ElevenLabs: the teacher reading the script in a boring, monotone voice, a ticking clock, faint traffic outside, and the student's yawn before he falls asleep. alyaafifi authorized this commit and the push to the new `classroom-audio` branch.
+- **Git author:** alyaafifi
+- **Git committer:** alyaafifi
+- **Git author date:** 2026-11-12T14:09:02+02:00
+- **Purpose:** Make the boredom of the classroom audible, so falling asleep and waking in Byblos lands in the `Harbor2D` story.
+- **Changes:**
+  - `unity/Assets/Scripts/Audio/StoryAudio.cs` is a new component with four channels (voice, effects, clock loop, traffic loop), each with its own low-pass filter.
+    - `StartClassroomAmbience()` starts both loops at a random point.
+    - `PlayTeacher(cue)` replaces the current line.
+    - `FallAsleep(seconds)` plays the yawn, then lowers the volume and sweeps the low-pass filter from 22 kHz to 400 Hz on the voice and loops, so the room sounds muffled.
+    - `StopAll()` silences everything.
+    - The mix is teacher 1.0, yawn 0.9, clock 0.35 and traffic 0.2.
+    - Clips load from `Resources/Audio/Classroom/`. A missing clip is skipped with one log message, so the story still runs silently.
+  - `unity/Assets/Scripts/UI/HarborStory.cs` (Programmer A's file) gets a few added calls and no changes to existing behaviour or text. It adds the `StoryAudio` component when enabled. The title and menu stop all audio. The "History class" card starts the ambience. The two teacher cards play `teacher-1` and `teacher-2`. "Your eyes close" calls `FallAsleep(2.9f)`, matching the existing 1.1 s + 1 s + 0.8 s eyelids and blackout. The one-line methods it touches became block bodies.
+  - `unity/Assets/Resources/Audio/Classroom/` holds `teacher-1.wav` (10.4 s) and `teacher-2.wav` (9.8 s), 24 kHz mono, and `clock.wav` (10 s), `traffic.wav` (15 s) and `yawn.wav` (3 s), 48 kHz mono. They are stored in Git LFS.
+  - `tools/audio/classroom-cues.json` holds the exact spoken text, which matches `HarborStory.cs`, and the effect prompts, durations, loudness targets and output formats. The teacher voice is Alice (`Xb7hH8MSUJpSbSDYk0k2`, British, middle-aged educator) with stability 0.95, style 0, speed 0.85 and no speaker boost, for a flat, slow delivery.
+  - `tools/audio/generate-elevenlabs.mjs` is a dependency-free Node script with `--list-voices`, generation from a cue file, `--only` and `--force`. It skips existing clips to save credits, wraps PCM in WAV, normalizes effects, and reads the key only from `ELEVENLABS_API_KEY`.
+  - `AUDIO_CUES.md` is the cue sheet: what plays when, voice and mix settings, regeneration steps, and the license note. `SOURCES.md` now registers the ElevenLabs audio.
+  - Tests: `Tests/EditMode/ClassroomAudioClipTests.cs` checks that every cue has a loadable clip of the requested length. `Tests/PlayMode/StoryAudioTests.cs` checks that the ambience and teacher play, that a new line replaces the old one, that falling asleep ends in silence, and that `StopAll()` works.
+  - `unity/ProjectSettings/PackageManagerSettings.asset` is a project settings file Unity created; it was untracked.
+- **Decisions:**
+  - Generated once and committed, so the game never calls ElevenLabs and ships no key.
+  - WAV instead of MP3, so the loops have no encoder gap at the loop point.
+  - The sound effects come back at 48 kHz even when 24 kHz is requested. The first files had a 24 kHz header and would have played at half speed and an octave too low. The headers were corrected locally and the clock (peak 0.04) was normalized. The generator now requests 48 kHz for effects and normalizes them, with no extra credits spent.
+  - The audio sits in its own component, so Programmer A's story script only gains one-line cue calls.
+  - Programmer A's two new commits on `main` (`efd41ce` and `829b345`) were merged in before committing. They don't touch the classroom or the sleep timing.
+- **Verification:**
+  - Checked the generated files: durations, peaks, and the clock's tick spacing, which confirmed 48 kHz.
+  - Batch-mode compile on Windows 11 with Unity 6000.6.8f1 had no errors or warnings.
+  - Edit-mode tests passed 24/24 and play-mode tests passed 5/5.
+  - The tests ran before Programmer A's two latest commits were merged. Those commits change other parts of `HarborStory.cs`, so they don't overlap; I didn't recompile after the merge because Unity was open in the editor.
+  - Gaps: alyaafifi hasn't yet listened in the Game view for mix, voice and timing.
+- **Technical skills needed to continue this work:**
+  - The ElevenLabs API: text to speech with voice IDs, models and voice settings; sound generation with duration, prompt influence and loop; and output formats and sample rates.
+  - Digital audio basics: PCM, WAV headers, sample rates, peak and RMS levels, normalization, and loop points.
+  - Unity audio: `AudioSource` (loop, `PlayOneShot`, volume, time), `AudioLowPassFilter`, `Resources.Load<AudioClip>`, and import settings.
+  - C# coroutines and fades with `Time.unscaledDeltaTime`, plus component lifecycle (`Awake`, `OnDisable`, lazy setup).
+  - Node.js scripting with `fetch`, Buffers and environment variables, and handling secrets safely.
+  - Unity Test Framework edit-mode and play-mode tests.
+- **Follow-up:**
+  - Listen in Unity: `Harbor2D` ▸ Play ▸ Begin ▸ Start story. Tune the volumes in `StoryAudio.cs`, or regenerate a line with `--only <cue> --force`.
+  - Record the ElevenLabs plan and attribution terms in `AUDIO_CUES.md`.
+  - The API key used for generation was exposed in a terminal session. Delete it in ElevenLabs and create a new one for future runs.
+  - If Programmer A changes the teacher's text in `HarborStory.cs`, update `tools/audio/classroom-cues.json` and regenerate that line.
+  - Merge `classroom-audio` into `main` after review.
+
 ### Add translation instructions and a project source register
 
 - **Status:** Ready for this commit
