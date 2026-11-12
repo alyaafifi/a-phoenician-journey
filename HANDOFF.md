@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Restore the helping-hand storyboard frame
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T13:06:46+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested the reaching-hand shot between the workers leaning over the student and standing upright, then approved an ImageGen reconstruction to replace the blurry preview. The project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T13:06:46+01:00
+- **Purpose:** Show how the student gets to his feet before the standing crew shot.
+- **Changes:** `HarborStory.cs` inserts a **Take his hand** beat between the young worker’s question and the dockworker’s reply. `helping-hand.jpg` is a 1672 × 940 reconstruction of the shot from page 7 of the supplied storyboard.
+- **Decisions:** Use the sharp wake-up shot as the base and the original storyboard preview as a pose reference. Keep the established crew, viewpoint, and harbor lighting.
+- **Verification:** Visually checked the reconstructed image and confirmed its dimensions. A Unity Play Mode smoke test imported the replacement and advanced from the young worker’s question to the helping-hand texture and then to the standing crew texture. Checked the working diff.
+- **Follow-up:** Review the shot alongside the surrounding frames in the Unity Game view.
+
 ### Add the Phoenician letter translation minigame
 
 - **Status:** Ready for this commit

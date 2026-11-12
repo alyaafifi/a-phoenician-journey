@@ -169,7 +169,10 @@ namespace PhoenicianJourney.UI
 
         private void ShowQuestion() =>
             ShowCard("wake", "Young worker", "Who’s this? Have either of you seen him before?",
-                "Continue", ShowReply);
+                "Continue", ShowHelpingHand);
+
+        private void ShowHelpingHand() =>
+            ShowCard("helping-hand", null, null, "Take his hand", ShowReply);
 
         private void ShowReply() =>
             ShowCard("crew", "Dockworker", "I haven’t. Where’d he come from? I didn’t see him get off a boat.",
