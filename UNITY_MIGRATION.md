@@ -75,15 +75,11 @@ The 90° rotation in the current browser copy was only needed for the Babylon.js
 
 ## The dye minigame (Programmer A)
 
-The contract is the same as in the Babylon.js prototype, now in C#:
+The dye stall opens a UI Toolkit screen. Select a plain swatch, dip it into the prepared bath, and lift it to reveal the color. The player can then return to the harbor with the finished sample.
 
-- When the player finishes the swatch, call `TradeState.Shared.CompleteDyeTask()` (`unity/Assets/Scripts/Trade/TradeState.cs`).
-- Don't call it when the player leaves an attempt unfinished. Calling it again does nothing, so cargo is never duplicated.
-- Launch the minigame from the dye stall by replacing the `StationId.Dye` entry in `HarborGame.OnEnable()` (`unity/Assets/Scripts/HarborGame.cs`). While it's open, call `player.SetMovementEnabled(false)`, and call `SetMovementEnabled(true)` when it closes, as the cargo screen does.
-- Build the 2D minigame as UI Toolkit (like `CargoScreen`) or as its own scene loaded additively. Both keep your files separate from the cargo files.
-- The proposed batch size of 4 bundles per finished swatch is still waiting for your confirmation (`TradeState.PreparedClothBundles`).
-
-Until the minigame is in, the dye stall gives a **mock result** in the editor and in development builds, or in a web build opened with `?mockDye`.
+- `DyeScreen.cs` owns the interaction. `HarborGame.cs` pauses movement while it is open and resumes movement on exit.
+- Returning with a finished swatch calls `TradeState.Shared.CompleteDyeTask()` and unlocks the prepared batch. The prototype keeps the existing four-bundle setting. Leaving early preserves the previous cargo state, and replaying cannot duplicate the batch.
+- The Harbor play-mode test covers an early exit, two completed attempts, and shipment of the resulting cloth.
 
 ## Working together without conflicts
 

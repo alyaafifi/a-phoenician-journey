@@ -6,6 +6,7 @@ BIP Project - Byblos
 The game is moving to Unity. Install **Unity 6.6 (6000.6.8f1)** with Unity Hub and run `git lfs install` once. Then add the `unity/` folder in Unity Hub, open `Assets/Scenes/Harbor.unity`, and press Play.
 
 - **Controls** · Click or drag to look, WASD or the arrow keys to walk, Shift to run, E to use a station, R to respawn, and Esc to free the mouse.
+- **Dye stall** · Press E at the stall, then select, dip, and lift a swatch. Return to the harbor to unlock the dyer’s prepared cloth for cargo.
 - **Tests** · Open **Window ▸ General ▸ Test Runner** and run the EditMode and PlayMode tests.
 - **New Blender export** · Save it as `unity/Assets/Art/harbor-landing.glb`, then run **Tools ▸ Phoenician Journey ▸ Rebuild Harbor Scene**.
 - **Windows build** · Run **Tools ▸ Phoenician Journey ▸ Build Windows**. It writes `unity/Builds/Windows/APhoenicianJourney.exe`.

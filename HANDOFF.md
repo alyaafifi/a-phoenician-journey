@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Build the Unity purple-dye minigame
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T11:14:04+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user approved implementing the select, dip and lift interaction and treating the swatch as a sample that unlocks a prepared cloth batch. Project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T11:14:04+01:00
+- **Purpose:** Replace the Unity dye stall's mock result with a playable Sprint 2 interaction.
+- **Changes:** `DyeScreen.cs` and `Harbor.uss` provide the UI Toolkit screen and swatch reveal. `HarborGame.cs` opens the screen at the dye stall, pauses movement, and sends the completed result to the shared trade state. Updated the Unity instructions and extended the existing Harbor play-mode test for cancellation and repeat completion.
+- **Decisions:** Reuse the existing harbor UI document and four-bundle trade-state setting. Return to the harbor after showing the finished swatch. Closing before the swatch is lifted does not unlock cargo.
+- **Verification:** Unity 6000.6.8f1 compiled on Apple Silicon macOS. Passed 23 EditMode and 3 PlayMode tests, including early exit, replay, and shipment in the harbor loop. Checked the working diff for whitespace.
+- **Follow-up:** Play through dye and cargo interactively on the Mac. Check keyboard and mouse focus, the swatch reveal, and movement after closing the screen.
+
 ### Port the harbor and cargo loop to Unity
 
 - **Status:** Ready for this commit

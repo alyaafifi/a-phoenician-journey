@@ -11,8 +11,8 @@ using UnityEngine.TestTools;
 namespace PhoenicianJourney.Tests
 {
     /// <summary>
-    /// Plays the generated harbor scene: the player lands on the ground, the dye stall gives
-    /// the mock result, and the cargo screen accepts only the shipment the letter describes.
+    /// Plays the generated harbor scene: the player lands on the ground, the dye task unlocks
+    /// the prepared cloth, and the cargo screen accepts only the shipment the letter describes.
     /// Rebuild the scene first (Tools ▸ Phoenician Journey ▸ Rebuild Harbor Scene).
     /// </summary>
     public sealed class HarborLoopTests
@@ -51,12 +51,32 @@ namespace PhoenicianJourney.Tests
         [UnityTest]
         public IEnumerator CompletesTheTradeLoop()
         {
-            // Dye stall: the mock result unlocks the cloth once.
             yield return StandNextTo(StationId.Dye);
             Assert.That(game.NearbyStation?.Id, Is.EqualTo(StationId.Dye), game.PromptText);
             game.UseNearbyStation();
-            game.UseNearbyStation();
-            Assert.That(TradeState.Shared.AvailableOf(ProductId.PurpleCloth), Is.EqualTo(TradeState.PreparedClothBundles));
+            var dye = game.Dye;
+            Assert.That(dye.IsOpen, Is.True);
+            dye.Advance();
+            dye.Advance();
+            Assert.That(TradeState.Shared.AvailableOf(ProductId.PurpleCloth), Is.Zero);
+            dye.Cancel();
+            Assert.That(dye.IsOpen, Is.False);
+            Assert.That(TradeState.Shared.AvailableOf(ProductId.PurpleCloth), Is.Zero);
+
+            // Reopening starts a fresh swatch. Replaying the full task leaves the batch unchanged.
+            for (var attempt = 0; attempt < 2; attempt++)
+            {
+                yield return null;
+                game.UseNearbyStation();
+                Assert.That(dye.IsOpen, Is.True);
+                dye.Advance(); // Select
+                dye.Advance(); // Dip
+                dye.Advance(); // Lift
+                Assert.That(dye.IsOpen, Is.True, "Show the finished swatch before returning.");
+                dye.Advance(); // Return
+                Assert.That(dye.IsOpen, Is.False);
+                Assert.That(TradeState.Shared.AvailableOf(ProductId.PurpleCloth), Is.EqualTo(TradeState.PreparedClothBundles));
+            }
 
             // Cargo station: the screen opens and walking pauses.
             yield return StandNextTo(StationId.Cargo);

@@ -354,3 +354,32 @@
     font-size: 13px;
     color: rgb(107, 92, 69);
 }
+
+.dye-panel {
+    width: 440px;
+    max-width: 94%;
+}
+
+.dye-instruction {
+    margin-bottom: 12px;
+    white-space: normal;
+}
+
+.cargo-panel .dye-swatch {
+    min-height: 90px;
+    margin-bottom: 12px;
+    background-color: #dac7a0;
+    color: #2c1b16;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+}
+
+.cargo-panel .dye-swatch-in-vat {
+    background-color: #74634d;
+    color: #fff1dd;
+}
+
+.cargo-panel .dye-swatch-finished {
+    background-color: #65366d;
+    color: #fff1dd;
+}

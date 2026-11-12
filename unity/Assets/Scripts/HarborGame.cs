@@ -23,6 +23,7 @@ namespace PhoenicianJourney
         private readonly Dictionary<StationId, StationAction> stationActions = new Dictionary<StationId, StationAction>();
         private UIDocument document;
         private CargoScreen cargoScreen;
+        private DyeScreen dyeScreen;
         private Label prompt;
         private Label status;
         private Label debug;
@@ -31,13 +32,13 @@ namespace PhoenicianJourney
 
         public CargoScreen Cargo => cargoScreen;
 
+        public DyeScreen Dye => dyeScreen;
+
+        private bool InteractionOpen => cargoScreen.IsOpen || dyeScreen.IsOpen;
+
         public Station NearbyStation => nearby;
 
         public string PromptText => prompt?.text ?? string.Empty;
-
-        /// <summary>The mock dye result is for development builds, or web builds opened with ?mockDye.</summary>
-        public static bool AllowMockDye =>
-            Application.isEditor || Debug.isDebugBuild || Application.absoluteURL.Contains("mockDye");
 
         public void Configure(FirstPersonWalker walker, StyleSheet styleSheet)
         {
@@ -97,22 +98,13 @@ namespace PhoenicianJourney
 
             cargoScreen = new CargoScreen(root, TradeState.Shared);
 
-            // Station actions. Programmer A replaces the dye entry with the dye minigame launcher.
-            // Until then the dye stall gives a mock result, so the shipment can be tested end to end.
+            dyeScreen = new DyeScreen(root);
             stationActions[StationId.Cargo] = new StationAction(
                 () => TradeState.Shared.ShipmentSent ? "Press E to see the shipment" : "Press E to load the ship",
                 OpenCargo);
             stationActions[StationId.Dye] = new StationAction(
-                () => TradeState.Shared.DyeTaskComplete
-                    ? "The purple cloth is ready on the landing"
-                    : AllowMockDye ? "Press E to dye a swatch (mock result)" : "The dye task is coming in Sprint 2",
-                () =>
-                {
-                    if (AllowMockDye && TradeState.Shared.CompleteDyeTask())
-                    {
-                        SetStatus("Mock dye result: the purple cloth is ready to ship.");
-                    }
-                });
+                () => TradeState.Shared.DyeTaskComplete ? "Press E to practice dyeing" : "Press E to dye a swatch",
+                OpenDye);
         }
 
         public void SetStatus(string text) => status.text = text;
@@ -120,7 +112,7 @@ namespace PhoenicianJourney
         /// <summary>Uses the station in reach, as the E key does.</summary>
         public void UseNearbyStation()
         {
-            if (nearby != null && stationActions.TryGetValue(nearby.Id, out var action))
+            if (!InteractionOpen && nearby != null && stationActions.TryGetValue(nearby.Id, out var action))
             {
                 action.Run();
                 UpdatePrompt();
@@ -133,10 +125,23 @@ namespace PhoenicianJourney
             cargoScreen.Open(() => player.SetMovementEnabled(true));
         }
 
+        private void OpenDye()
+        {
+            player.SetMovementEnabled(false);
+            dyeScreen.Open(finished =>
+            {
+                player.SetMovementEnabled(true);
+                if (finished && TradeState.Shared.CompleteDyeTask())
+                {
+                    SetStatus("The dyer’s prepared batch of purple cloth is ready to ship.");
+                }
+            });
+        }
+
         private void Update()
         {
             var keyboard = Keyboard.current;
-            if (keyboard != null && !cargoScreen.IsOpen)
+            if (keyboard != null && !InteractionOpen)
             {
                 if (keyboard.eKey.wasPressedThisFrame)
                 {
@@ -164,7 +169,7 @@ namespace PhoenicianJourney
         private void UpdatePrompt()
         {
             nearby = null;
-            if (!cargoScreen.IsOpen)
+            if (!InteractionOpen)
             {
                 var best = Station.Reach;
                 foreach (var station in Station.Active)
