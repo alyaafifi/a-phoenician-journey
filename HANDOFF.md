@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Document the harbor voice direction for Programmer B
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T14:37:51+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested a Programmer B voice brief based on the prior harbor and narrator direction, and authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T14:37:51+01:00
+- **Purpose:** Give Programmer B the creative and technical details needed to produce shareable harbor dialogue and tutorial narration.
+- **Changes:** `HARBOR_VOICES.md` documents the wake-up soundscape, three worker voices, aside-to-direct transition, original narrator, ten speech cues, generation and import workflow, and Unity listening checks.
+- **Decisions:** Reuse the existing cue sheet, ambience loops, and runtime mixing. Try a single speech cue before generating the full set.
+- **Verification:** Checked the brief against the runtime and cue sheet, verified all ten speech cue IDs and repository links, and checked the staged diff for whitespace.
+- **Follow-up:** Programmer B can choose accessible voices, generate shareable speech, and verify the mix in Unity.
+
 ### Play the illustrated purple dye sequence from the Byblos stall
 
 - **Status:** Ready for this commit
