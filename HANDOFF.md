@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Refine the classroom and wake-up transition
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T11:44:46+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested matching teacher shots and slower sleep and wake beats, and approved fading blurred frames into the sharp originals. The project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T11:44:46+01:00
+- **Purpose:** Keep the teacher composition consistent and show the student's vision coming into focus in Byblos.
+- **Changes:** `HarborStory.cs` uses the second teacher shot for both dialogue beats, extends the sleep and wake sequence from 3.3 to 5.4 seconds, and fades a downsampled copy of each wake-up shot over the original. The wake-up phase lasts 2.5 seconds after the blackout.
+- **Decisions:** Use the existing artwork at every step. Generate the blurred copies at runtime and release them when each shot ends or the scene is disabled. Preserve all dialogue and button text.
+- **Verification:** Unity recompiled and reloaded the project assembly after the blur implementation. Checked the dialogue and button strings against the previous version. Checked the final timing values and working diff.
+- **Follow-up:** Play through the transition in the Unity Game view to judge the timing and strength of the blur.
+
 ### Add the illustrated 2D harbor story prototype
 
 - **Status:** Ready for this commit

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using PhoenicianJourney.Trade;
 using UnityEngine;
@@ -17,7 +18,8 @@ namespace PhoenicianJourney.UI
         private VisualElement controls;
         private DyeScreen dye;
         private CargoScreen cargo;
-        private IVisualElementScheduledItem transition;
+        private Coroutine transition;
+        private Texture2D blurredFrame;
         private TradeState trade;
         private bool cedarRepaired;
 
@@ -45,7 +47,10 @@ namespace PhoenicianJourney.UI
 
         private void OnDisable()
         {
-            transition?.Pause();
+            if (transition != null)
+                StopCoroutine(transition);
+            transition = null;
+            ReleaseBlurredFrame();
             GetComponent<UIDocument>().rootVisualElement?.UnregisterCallback<GeometryChangedEvent>(FitFrame);
         }
 
@@ -65,25 +70,98 @@ namespace PhoenicianJourney.UI
         private void ShowClassroom() =>
             ShowCard("classroom", "History class", "The teacher has been talking about the Phoenicians for a while.", "Continue", ShowTeacher);
 
-        private void ShowTeacher()
-        {
-            ShowCard("classroom", "Teacher",
+        private void ShowTeacher() =>
+            ShowCard("teacher", "Teacher",
                 "Now, back to Byblos. They shipped cedar, traded cloth, and sailed as far as Cyprus. We’ll get to Cyprus in a minute. First, the timber…",
                 "Continue", ShowDrowsy);
-            var teacher = new VisualElement { pickingMode = PickingMode.Ignore };
-            teacher.AddToClassList("story-teacher");
-            teacher.style.backgroundImage = Artwork("teacher-cutout");
-            controls.Insert(0, teacher);
-        }
 
         private void ShowDrowsy() =>
             ShowCard("teacher", "Teacher",
                 "So where were we? Right. Once the timber reached the harbor, someone still had to load the ship. Now, if you look at the diagram…",
-                "Your eyes close", () => ShowTransition("eyes-half", 950,
-                    () => ShowTransition("eyes-shut", 850,
-                        () => ShowTransition(null, 650,
-                            () => ShowTransition("wake-narrow", 400,
-                                () => ShowTransition("wake-wide", 450, ShowWake))))));
+                "Your eyes close", () => transition = StartCoroutine(FallAsleepAndWake()));
+
+        private IEnumerator FallAsleepAndWake()
+        {
+            SetFrame("eyes-half");
+            yield return new WaitForSecondsRealtime(1.1f);
+            SetFrame("eyes-shut");
+            yield return new WaitForSecondsRealtime(1f);
+            SetFrame(null);
+            yield return new WaitForSecondsRealtime(0.8f);
+            yield return FadeWakeFrame("wake-narrow", 0.85f, 1f, 0.85f);
+            yield return FadeWakeFrame("wake-wide", 1f, 0.85f, 0.4f);
+            yield return FadeWakeFrame("wake", 0.65f, 0.4f, 0f);
+            transition = null;
+            ShowWake();
+        }
+
+        private IEnumerator FadeWakeFrame(string art, float duration, float startOpacity, float endOpacity)
+        {
+            SetFrame(art);
+            var source = Resources.Load<Texture2D>("Harbor2D/" + art);
+            blurredFrame = MakeBlurredCopy(source);
+            var blur = new VisualElement { pickingMode = PickingMode.Ignore };
+            blur.AddToClassList("story-frame");
+            blur.AddToClassList("story-controls");
+            blur.style.backgroundImage = new StyleBackground(blurredFrame);
+            controls.Add(blur);
+
+            float started = Time.unscaledTime;
+            float elapsed;
+            do
+            {
+                elapsed = Time.unscaledTime - started;
+                blur.style.opacity = Mathf.Lerp(startOpacity, endOpacity, elapsed / duration);
+                yield return null;
+            } while (elapsed < duration);
+
+            blur.RemoveFromHierarchy();
+            ReleaseBlurredFrame();
+        }
+
+        private static Texture2D MakeBlurredCopy(Texture2D source)
+        {
+            RenderTexture previous = RenderTexture.active;
+            RenderTexture reduced = null;
+            try
+            {
+                // Repeated bilinear downsampling averages the artwork before UI Toolkit scales it back up.
+                Texture input = source;
+                do
+                {
+                    var smaller = RenderTexture.GetTemporary(Mathf.Max(1, input.width / 2), Mathf.Max(1, input.height / 2));
+                    smaller.filterMode = FilterMode.Bilinear;
+                    Graphics.Blit(input, smaller);
+                    if (reduced != null)
+                        RenderTexture.ReleaseTemporary(reduced);
+                    reduced = smaller;
+                    input = smaller;
+                } while (input.width > 64);
+
+                RenderTexture.active = reduced;
+                var copy = new Texture2D(reduced.width, reduced.height, TextureFormat.RGBA32, false)
+                {
+                    filterMode = FilterMode.Bilinear,
+                    wrapMode = TextureWrapMode.Clamp
+                };
+                copy.ReadPixels(new Rect(0, 0, reduced.width, reduced.height), 0, 0);
+                copy.Apply(false, true);
+                return copy;
+            }
+            finally
+            {
+                RenderTexture.active = previous;
+                if (reduced != null)
+                    RenderTexture.ReleaseTemporary(reduced);
+            }
+        }
+
+        private void ReleaseBlurredFrame()
+        {
+            if (blurredFrame != null)
+                Destroy(blurredFrame);
+            blurredFrame = null;
+        }
 
         private void ShowWake() =>
             ShowCard("wake", "A dream of Byblos", "The teacher’s voice fades. You hear waves against stone. Three strangers lean over you.",
@@ -186,15 +264,8 @@ namespace PhoenicianJourney.UI
             });
         }
 
-        private void ShowTransition(string art, long duration, Action next)
-        {
-            SetFrame(art);
-            transition = frame.schedule.Execute(next).StartingIn(duration);
-        }
-
         private void SetFrame(string art)
         {
-            transition?.Pause();
             controls.Clear();
             controls.SetEnabled(true);
             frame.style.backgroundImage = Artwork(art);
