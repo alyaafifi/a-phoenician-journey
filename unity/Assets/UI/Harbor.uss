@@ -383,3 +383,123 @@
     background-color: #65366d;
     color: #fff1dd;
 }
+
+.story-root {
+    align-items: center;
+    justify-content: center;
+    background-color: #151116;
+}
+
+.story-frame {
+    background-color: #000000;
+    background-size: 100% 100%;
+    flex-shrink: 0;
+}
+
+.story-controls {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.story-card {
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    bottom: 4%;
+    padding: 12px 16px;
+    background-color: rgba(32, 20, 27, 0.93);
+    border-radius: 8px;
+    color: #fff1dd;
+    font-size: 16px;
+}
+
+.story-card Label {
+    white-space: normal;
+    color: #fff1dd;
+}
+
+.story-speaker {
+    -unity-font-style: bold;
+    font-size: 20px;
+}
+
+.story-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.story-actions Button {
+    padding: 6px 14px;
+    margin-right: 8px;
+    background-color: #f5d294;
+    color: #2d1a20;
+}
+
+.story-actions Button:focus {
+    border-color: #b981c1;
+}
+
+.story-banner {
+    position: absolute;
+    left: 4%;
+    top: 4%;
+    padding: 6px 12px;
+    background-color: #321e2e;
+    color: #fff1dd;
+    border-radius: 6px;
+}
+
+.story-hotspot {
+    position: absolute;
+    margin: 0;
+    padding-bottom: 6px;
+    background-color: rgba(35, 18, 32, 0);
+    border-color: rgba(255, 222, 154, 0);
+    border-width: 2px;
+    border-radius: 8px;
+    -unity-text-align: lower-center;
+    -unity-font-style: bold;
+    color: #fff1dd;
+    -unity-text-outline-color: #281823;
+    -unity-text-outline-width: 1px;
+}
+
+.story-hotspot:hover, .story-hotspot:focus {
+    background-color: rgba(39, 19, 36, 0.22);
+    border-color: #ffde9a;
+}
+
+.story-teacher {
+    position: absolute;
+    left: 32%;
+    top: 19%;
+    width: 27%;
+    height: 65%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.story-action-icon, .story-pointer {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.story-pointer {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}
+
+.story-hotspot:hover > .story-pointer, .story-hotspot:focus > .story-pointer {
+    display: flex;
+}

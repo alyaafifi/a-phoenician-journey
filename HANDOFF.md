@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Add the illustrated 2D harbor story prototype
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T11:14:20+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested a first 2D implementation from the designer’s storyboard and authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T11:14:20+01:00
+- **Purpose:** Play the storyboard opening and the existing trade loop from an illustrated harbor in Unity.
+- **Changes:** `Assets/Scenes/Harbor2D.unity` adds a separate playable scene. `HarborStory.cs` implements title, classroom, blink, wake-up, bottle and order, then offers purple dye on the left, cedar carpentry on the right, and loading and trade routes at the ship. The scene reuses `DyeScreen`, `CargoScreen`, and one session-local trade state. Added setup and play instructions to `README.md` and scene styles to `Harbor.uss`. The frames in `Assets/Resources/Harbor2D` come from the supplied storyboard PDF and JPG, including the occupied classroom, teacher cutout and menu panel. The bottle and pointer icons are from the supplied icons PDF.
+- **Decisions:** Keep students visible in all classroom shots and hold the two closing-eyelid frames for 950 and 850 ms before a 650 ms blackout. The teacher rambles about Phoenician history before the student dreams of life in Byblos. The harbor workers wonder who the newcomer is, then ask him to pick a trade. Use temporary dialogue and button-based plank fitting. The ship provides the order and route descriptions from the existing cargo data. Keep the existing build target while the 2D prototype is reviewed. Add a scene-local EventSystem and Input System UI module for mouse input.
+- **Verification:** Unity compiled the revised scene and imported the supplied crew frame. In Play mode, clicked through the title and menu and confirmed that seated students remain visible behind the teacher during her lecture. Checked the revised asset references, station assignments, and working diff.
+- **Follow-up:** Play through the slower eyelid transition and revised harbor dialogue, then continue to a successful shipment. Replace annotated storyboard close-ups and confirm dialogue before presentation. Confirm the default build scene and any remaining settings icons separately.
+
 ### Build the Unity purple-dye minigame
 
 - **Status:** Ready for this commit
