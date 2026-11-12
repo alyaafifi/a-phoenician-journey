@@ -503,3 +503,114 @@
 .story-hotspot:hover > .story-pointer, .story-hotspot:focus > .story-pointer {
     display: flex;
 }
+
+.letter-game {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.letter-parchment {
+    position: absolute;
+    top: 33%;
+    bottom: 28%;
+    left: 18%;
+    width: 36%;
+    color: #54232d;
+}
+
+.letter-reference {
+    position: absolute;
+    top: 8%;
+    bottom: 33%;
+    left: 67%;
+    right: 3%;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: rgba(54, 25, 43, 0.96);
+    color: #fff1dd;
+}
+
+.letter-reference Label, .letter-bank Label {
+    white-space: normal;
+}
+
+#letter-reference-title {
+    font-size: 19px;
+    -unity-font-style: bold;
+}
+
+.letter-alphabet, .letter-options {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.letter-reference-entry {
+    flex-direction: row;
+    align-items: center;
+    margin-right: 6px;
+    margin-bottom: 3px;
+}
+
+.letter-glyphs {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    font-size: 17px;
+}
+
+.letter-glyphs Label {
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 2px;
+}
+
+.letter-row {
+    margin-bottom: 5px;
+}
+
+.letter-slot, .letter-tile {
+    white-space: normal;
+}
+
+.letter-bank {
+    position: absolute;
+    bottom: 2%;
+    left: 3%;
+    right: 3%;
+    max-height: 30%;
+    padding: 6px;
+    border-radius: 8px;
+    background-color: rgba(54, 25, 43, 0.96);
+    color: #fff1dd;
+}
+
+.letter-options {
+    flex-shrink: 1;
+}
+
+.letter-bank Button {
+    background-color: #f3d79c;
+    color: #351e2b;
+    font-size: 12px;
+}
+
+.letter-tile {
+    width: 24%;
+}
+
+.letter-bank .letter-selected, .letter-bank Button:focus {
+    background-color: #d6add9;
+}
+
+.letter-ghost {
+    position: absolute;
+    max-width: 40%;
+    white-space: normal;
+    background-color: #f3d79c;
+    color: #351e2b;
+    padding: 6px;
+}

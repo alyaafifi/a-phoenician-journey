@@ -182,12 +182,18 @@ namespace PhoenicianJourney.UI
 
         private void ShowOffer() =>
             ShowCard("offer", "Harbor worker", "And if you want to help on the ship, take this. The order tells us what goes where.", "Take the bottle",
-                () => ShowCard("bottle", null, null, "Unseal the bottle", () => ShowLetter(true), icon: "bottle-icon"));
+                () => ShowCard("bottle-student", null, null, "Unseal the bottle", ShowTranslation, icon: "bottle-icon"));
 
-        private void ShowLetter(bool fromIntro)
+        private void ShowTranslation()
+        {
+            SetFrame("decode-letter");
+            new LetterScreen(controls, ShowHarbor);
+        }
+
+        private void ShowLetter()
         {
             string order = string.Join("\n\n", Shipment.SampleOrder.Select(line => line.Text));
-            ShowCard("letter", "Shipping order", order, fromIntro ? "Look around" : "Return to harbor", ShowHarbor);
+            ShowCard("decode-letter", "Shipping order", order, "Return to harbor", ShowHarbor);
         }
 
         private void ShowHarbor()
@@ -216,7 +222,7 @@ namespace PhoenicianJourney.UI
                 return $"{TradeCatalog.Products[line.Product].Name} · Byblos to {destination.Name}\n{destination.Route}";
             }));
             ShowCard("ship", "Trade routes", routes + "\n\nThese are reconstructed routes for this order.",
-                "Load the ship", OpenCargo, "Read shipping order", () => ShowLetter(false), "Back to ship", ShowShip);
+                "Load the ship", OpenCargo, "Read shipping order", ShowLetter, "Back to ship", ShowShip);
         }
 
         private void ShowCarpentry() => ShowPlankChoices("This boat needs a replacement plank. Choose one that spans the gap.");

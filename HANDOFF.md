@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Add the Phoenician letter translation minigame
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T12:17:49+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested a drag-and-drop English translation with a Phoenician alphabet reference, approved using a sourced draft, and limited implementation to the letter minigame. The project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T12:17:49+01:00
+- **Purpose:** Make decoding the bottle's letter the first minigame in the illustrated story.
+- **Changes:** `HarborStory.cs` opens `LetterScreen.cs` after unsealing the bottle. The new screen displays right-to-left Phoenician, an alphabet key and cargo glossary, and English tiles matched to all eight lines. It supports drag-and-drop and tile-then-line selection. Added illustrated bottle and letter frames with modern sweatshirt cuffs, the licensed Phoenician font, and `LETTER_TRANSLATION.md` with sources.
+- **Decisions:** Require the complete translation before revealing the harbor. Use the agreed cloth and cedar order in the letter. Cargo integration is a separate change, so the current cargo interface continues to use its existing cloth and wine order.
+- **Verification:** Unity compiled the scripts. A Play Mode smoke test in an isolated project copy verified the artwork and font imports, rejected a wrong match, completed all eight lines with keyboard events, and opened the harbor.
+- **Follow-up:** Review the reconstructed wording with a Phoenician specialist, try mouse dragging and check the visual layout in the Unity Game view, and connect the cedar order to cargo when requested.
+
 ### Refine the classroom and wake-up transition
 
 - **Status:** Ready for this commit
