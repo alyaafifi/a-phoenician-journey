@@ -4,6 +4,9 @@ The letter is a modern reconstruction for the game. The Phoenician text in
 `LetterScreen.cs` is a draft for specialist review. The English tiles give the
 intended meaning of each line and the instructions the player needs.
 
+The [project source register](SOURCES.md#writing-alphabet-and-translation)
+also records the sources for the in-game alphabet facts.
+
 - The Byblos and Egypt names draw on [KAI 001](https://deaps.osu.edu/text_objects/11441)
   and [KAI 005](https://deaps.osu.edu/text_objects/11445). The latter discusses
   the reading of Egypt in the Abibaal inscription. The spelling of Kition

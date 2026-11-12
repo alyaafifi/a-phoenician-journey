@@ -13,6 +13,8 @@ The game is moving to Unity. Install **Unity 6.6 (6000.6.8f1)** with Unity Hub a
 
 Setup, workflow, and file ownership are in [the Unity migration](UNITY_MIGRATION.md).
 
+Historical research, artwork provenance, and minigame references are collected in the [project source register](SOURCES.md).
+
 ## Illustrated 2D prototype
 
 Open `unity/Assets/Scenes/Harbor2D.unity` in Unity and press **Play**. Choose **Begin** for the classroom and bottle sequence, or **Skip to harbor** to try the three stations immediately. Click the left stall to dye a swatch, the right stall to repair a plank, or the ship to review the order, learn the routes, and load cargo. The dialogue and the annotated storyboard close-ups are temporary. The existing build commands still target the original Harbor scene.

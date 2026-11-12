@@ -614,3 +614,72 @@
     color: #351e2b;
     padding: 6px;
 }
+
+.letter-popup {
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(21, 13, 24, 0.66);
+}
+
+.letter-popup-panel {
+    width: 62%;
+    max-width: 640px;
+    max-height: 90%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #36192b;
+    color: #fff1dd;
+}
+
+.letter-popup-panel Label {
+    white-space: normal;
+    margin-bottom: 8px;
+}
+
+.letter-popup-heading {
+    font-size: 22px;
+    -unity-font-style: bold;
+}
+
+.letter-popup-panel Button {
+    align-self: flex-start;
+    background-color: #f3d79c;
+    color: #351e2b;
+}
+
+.letter-popup-panel Button:focus {
+    background-color: #d6add9;
+}
+
+.letter-help {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.letter-guide-left, .letter-guide-right {
+    justify-content: flex-start;
+    padding: 5%;
+    background-color: rgba(21, 13, 24, 0.24);
+}
+
+.letter-guide-left {
+    align-items: flex-start;
+}
+
+.letter-guide-right {
+    align-items: flex-end;
+}
+
+.letter-guide-left .letter-popup-panel, .letter-guide-right .letter-popup-panel {
+    width: 42%;
+}
+
+.letter-guide-highlight {
+    border-width: 2px;
+    border-color: #f4c878;
+    border-radius: 4px;
+}
+
+.letter-popup-panel .letter-glyphs {
+    font-size: 26px;
+}

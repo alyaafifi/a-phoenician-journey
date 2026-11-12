@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Add translation instructions and a project source register
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T13:06:46+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested an instruction popup, alphabet facts, and a structured source register for the repository. The project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T13:06:46+01:00
+- **Purpose:** Teach players how to read the letter and use the reference tools, share alphabet facts, and give contributors one place to find project references.
+- **Changes:** `LetterScreen.cs` and `Harbor.uss` add a four-step guide highlighting the parchment, alphabet key, word references, and English tile bank. The guide decodes GBL into Byblos and demonstrates the first English match. It ends with three alphabet facts before play. The reference panel can reopen the guide and facts. `SOURCES.md` records alphabet, letter, harbor, craft, cargo, art, and setup sources with their uses and limits. The README and letter notes link to the register.
+- **Decisions:** Disable puzzle interaction while a popup is open and focus its action button. Use a worked example from the first line to distinguish identifying letters from translating a word.
+- **Verification:** An isolated Unity Play Mode smoke test verified guide navigation, highlights, glossary expansion, facts before play, completing the puzzle with keyboard input, reopening the facts, and proceeding to the harbor. Checked source coverage against the existing historical documents and verified repository links.
+- **Follow-up:** Check popup layout with the mouse in the Unity Game view.
+
 ### Restore the helping-hand storyboard frame
 
 - **Status:** Ready for this commit
