@@ -6,18 +6,17 @@ namespace PhoenicianJourney.UI
 {
     public sealed class DyeScreen
     {
-        private static readonly string[] Instructions =
+        private static readonly (string Artwork, string Line, string Action)[] Stages =
         {
-            "Choose a plain swatch to test the dyer’s prepared bath.",
-            "Dip the swatch into the vat.",
-            "Lift the swatch to see its color.",
+            ("dye-murex", "This is a murex shell. The dye starts with a substance from a gland inside the snail.", "Examine the murex"),
+            ("dye-plain", "It took many snails and several stages to prepare this bath. It’s skilled work. Choose a plain wool swatch to test it.", "Select swatch"),
+            ("dye-selected", "Lower the swatch into the prepared dye bath.", "Dip swatch"),
+            ("dye-dipped", "Lift the swatch out of the vat and look at its color.", "Lift swatch"),
+            ("dye-reveal", "The wool is purple. This cloth is valuable. Take the swatch back to the landing so we can load the prepared batch.", "Return to harbor"),
         };
-
-        private static readonly string[] Actions = { "Select swatch", "Dip swatch", "Lift swatch" };
 
         private readonly VisualElement overlay;
         private readonly Label instruction;
-        private readonly Label swatch;
         private readonly Button advance;
         private readonly Button leave;
         private Action<bool> onClose;
@@ -26,40 +25,36 @@ namespace PhoenicianJourney.UI
         public DyeScreen(VisualElement root)
         {
             overlay = new VisualElement { name = "dye-screen" };
-            overlay.AddToClassList("cargo-screen");
+            overlay.AddToClassList("story-controls");
+            overlay.AddToClassList("dye-screen");
             overlay.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
 
-            var panel = new ScrollView(ScrollViewMode.Vertical);
-            panel.AddToClassList("cargo-panel");
-            panel.AddToClassList("dye-panel");
-            overlay.Add(panel);
+            var card = new VisualElement();
+            card.AddToClassList("story-card");
+            card.AddToClassList("dye-card");
+            overlay.Add(card);
 
-            var title = new Label("Test a purple swatch");
-            title.AddToClassList("cargo-title");
-            panel.Add(title);
+            var speaker = new Label("Dyer");
+            speaker.AddToClassList("story-speaker");
+            card.Add(speaker);
 
             instruction = new Label();
-            instruction.AddToClassList("dye-instruction");
-            panel.Add(instruction);
+            card.Add(instruction);
 
-            swatch = new Label { name = "dye-swatch" };
-            swatch.AddToClassList("dye-swatch");
-            panel.Add(swatch);
-
+            var actions = new VisualElement();
+            actions.AddToClassList("story-actions");
+            card.Add(actions);
             advance = new Button(Advance) { name = "dye-advance" };
-            panel.Add(advance);
-            leave = new Button(Cancel) { text = "Leave stall" };
-            panel.Add(leave);
-
-            var note = new Label("This task starts with a prepared dye bath. The Byblos stall is reconstructed from regional evidence.");
-            note.AddToClassList("cargo-note");
-            panel.Add(note);
+            actions.Add(advance);
+            leave = new Button(Cancel) { name = "dye-leave", text = "Leave stall" };
+            actions.Add(leave);
 
             root.Add(overlay);
             overlay.style.display = DisplayStyle.None;
         }
 
         public bool IsOpen => overlay.style.display == DisplayStyle.Flex;
+        private bool Finished => step == Stages.Length - 1;
 
         public void Open(Action<bool> closed)
         {
@@ -73,11 +68,9 @@ namespace PhoenicianJourney.UI
         public void Advance()
         {
             if (!IsOpen)
-            {
                 return;
-            }
 
-            if (step == Instructions.Length)
+            if (Finished)
             {
                 Close(true);
                 return;
@@ -87,33 +80,24 @@ namespace PhoenicianJourney.UI
             ShowStep();
         }
 
-        public void Cancel() => Close(step == Instructions.Length);
+        public void Cancel() => Close(Finished);
 
         private void ShowStep()
         {
-            bool finished = step == Instructions.Length;
-            instruction.text = finished ? "The swatch is purple. Take it back to the landing." : Instructions[step];
-            advance.text = finished ? "Return to harbor" : Actions[step];
-            leave.style.display = finished ? DisplayStyle.None : DisplayStyle.Flex;
-            swatch.text = step switch
-            {
-                0 => "Plain cloth",
-                1 => "Swatch selected",
-                2 => "Swatch in the vat",
-                _ => "Purple swatch",
-            };
-            swatch.EnableInClassList("dye-swatch-in-vat", step == 2);
-            swatch.EnableInClassList("dye-swatch-finished", finished);
+            var stage = Stages[step];
+            overlay.style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Harbor2D/" + stage.Artwork));
+            instruction.text = stage.Line;
+            advance.text = stage.Action;
+            leave.style.display = Finished ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         private void Close(bool finished)
         {
             if (!IsOpen)
-            {
                 return;
-            }
 
             overlay.style.display = DisplayStyle.None;
+            overlay.style.backgroundImage = StyleKeyword.None;
             var callback = onClose;
             onClose = null;
             callback?.Invoke(finished);

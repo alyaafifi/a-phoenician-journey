@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Play the illustrated purple dye sequence from the Byblos stall
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T14:35:48+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user approved the five-step flow and asked to wire it to the harbor’s purple dye area. Project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T14:35:48+01:00
+- **Purpose:** Let players learn the source and value of purple dye while helping the Byblos dyer test a prepared bath.
+- **Changes:** The left hotspot in `HarborStory.cs` now covers the shell basket. `DyeScreen.cs` and `Harbor.uss` show a dyer’s card over five ImageGen frames in `Assets/Resources/Harbor2D`: murex, plain wool, selected wool, dipped wool, and purple reveal. The existing completion callback still unlocks the prepared cloth batch. The 3D harbor uses the same screen, and its trade-loop test now advances through the murex introduction.
+- **Decisions:** Reuse the five reviewed frames and keep controls and dialogue in UI Toolkit. The dialogue places the player at a prepared bath and explains the source, labor, and value without staging a recipe. Preserve each texture’s proportions during import.
+- **Verification:** In an isolated Unity 6000.6.8f1 copy, the 2D smoke test verified the basket hotspot bounds, cancellation and reopen, the artwork and control at each stage, and the cloth-ready banner. The 3D trade loop and station discovery passed. The 3D spawn grounding assertion varied at the uncapped batch frame rate while the player stayed at the same position. All four targeted tests passed in a temporary 60 fps simulation run.
+- **Follow-up:** Review mouse input and the dialogue card in the Unity Game view.
+
 ### Prepare harbor ambience and letter narration
 
 - **Status:** Ready for this commit

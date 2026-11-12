@@ -69,6 +69,7 @@ namespace PhoenicianJourney.Tests
                 yield return null;
                 game.UseNearbyStation();
                 Assert.That(dye.IsOpen, Is.True);
+                dye.Advance(); // Examine murex
                 dye.Advance(); // Select
                 dye.Advance(); // Dip
                 dye.Advance(); // Lift

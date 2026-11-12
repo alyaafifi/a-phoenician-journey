@@ -252,7 +252,7 @@ namespace PhoenicianJourney.UI
                 : trade.DyeTaskComplete ? "Purple cloth is ready to load" : "Byblos harbor");
             banner.AddToClassList("story-banner");
             controls.Add(banner);
-            AddHotspot("dye", "Purple dye", "harbor-left", 6, 40, 22, 46, OpenDye);
+            AddHotspot("dye", "Purple dye", "harbor-left", 0, 40, 28, 60, OpenDye);
             AddHotspot("ship", "Ship loading & routes", "harbor-ship", 39, 33, 23, 43, ShowShip);
             AddHotspot("cedar", cedarRepaired ? "Cedar carpentry · repaired" : "Cedar carpentry",
                 "harbor-right", 72, 37, 27, 49, ShowCarpentry);
@@ -297,7 +297,6 @@ namespace PhoenicianJourney.UI
 
         private void OpenDye()
         {
-            frame.style.backgroundImage = Artwork("harbor-left");
             controls.SetEnabled(false);
             dye.Open(finished =>
             {
