@@ -31,6 +31,50 @@
 
 ## Entries
 
+### Generate the harbor voice-overs and fix stereo classroom effects
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T15:49:43+02:00
+- **Work by:** alyaafifi (Programmer B) with Claude Code (Claude Opus 5.5)
+- **Requested or approved by:** alyaafifi asked to follow `HARBOR_VOICES.md` and fix the harbor voice-overs, generate them all with ElevenLabs, run the result, and commit and push to `main`.
+- **Git author:** alyaafifi
+- **Git committer:** alyaafifi
+- **Git author date:** 2026-11-12T15:49:43+02:00
+- **Purpose:** Replace the subtitle-only harbor dialogue and letter tutorial with real voices, as Programmer A asked in `HARBOR_VOICES.md`, and fix a playback bug in the classroom effects.
+- **Changes:**
+  - `tools/audio/harbor-cues.json` recasts all four voices with ElevenLabs **premade** voices, which the free API plan allows:
+    - **Liam** (`TX3LPaxmHKxFdv7VOQHJ`, young and energetic) as the young worker;
+    - **Callum** (`N2lVS1w4EtoT3dr4eOWO`, husky, middle-aged) as the dockworker;
+    - **Chris** (`iP95p4xoKVk53GoZ742B`, down-to-earth) as the harbor worker;
+    - **Brian** (`nPczCjzI2devNBz1zQrb`, deep and comforting) as the narrator.
+
+    The text, models and voice settings are unchanged. The earlier Voice Library voices returned `HTTP 402 paid_plan_required`, and the dockworker ID had 19 characters, one short.
+  - `unity/Assets/Resources/Audio/Harbor/` adds the ten speech clips with their `.meta` files, 24 kHz mono WAV in Git LFS: `young-worker` 2.9 s, `dockworker` 4.8 s, `foreman-aside` 2.6 s, `foreman-address` 5.9 s, `foreman-offer` 4.3 s, `guide-1` 9.1 s, `guide-2` 20.7 s, `guide-3` 12.3 s, `guide-4` 12.8 s, `guide-facts` 23.6 s. The existing `waves` and `birds` were left as they were.
+  - `unity/Assets/Resources/Audio/Classroom/clock.wav`, `traffic.wav` and `yawn.wav` get corrected WAV headers: **24 kHz stereo**, where earlier versions had 24 kHz mono and then 48 kHz mono. The audio samples are unchanged. Sample-pair analysis showed interleaved stereo. The traffic's two channels differ, so as mono it played as hiss. The lengths are still exactly 10, 15 and 3 s. Programmer A's generator already detects stereo effects for future runs.
+  - `unity/Assets/Editor/BuildScript.cs` adds **Tools ▸ Phoenician Journey ▸ Build Windows (2D story)** (`BuildWindowsStory`), which builds `Assets/Scenes/Harbor2D.unity` to `Builds/WindowsStory/APhoenicianJourney.exe`. `Build()` now takes an optional scene. The 3D `Build Windows` is unchanged.
+  - `AUDIO_CUES.md`, `HARBOR_VOICES.md` and `SOURCES.md` name the generated cast, drop the note that harbor speech was unavailable, and record the stereo finding.
+- **Decisions:**
+  - Premade voices instead of Voice Library voices, so a free account can generate and regenerate every line. Each voice was matched to the direction in `HARBOR_VOICES.md`, and all four sound different from each other and from Alice, the teacher.
+  - Fixed the classroom headers locally instead of regenerating, so no credits were spent.
+  - Added a separate 2D build instead of switching the default build, so the 3D build stays available, as decided on 12 November.
+- **Verification:**
+  - Checked every clip's sample rate, length, peak and RMS.
+  - The stereo diagnosis compared differences between left/right sample pairs and neighbouring frames, for all five effect files.
+  - Batch-mode tests with Unity 6000.6.8f1: edit-mode 24/24 and play-mode 5/5.
+  - The 2D story Windows build succeeded at 137.5 MB and launched in a window with no errors in its player log. alyaafifi played it.
+  - Gaps: the mix wasn't fine-tuned against `HARBOR_VOICES.md`'s checks (aside clarity, the move to clear speech, ambience level) beyond the play-through.
+- **Technical skills needed to continue this work:**
+  - ElevenLabs voice types (premade, Voice Library and cloned) and which ones each plan can use through the API, plus listing voices and choosing settings.
+  - PCM and WAV structure: channels, sample rate, byte rate, block align, interleaved stereo, and checking an audio file's format from its data.
+  - Unity audio import, `AudioSource` mixing and low-pass filtering in `StoryAudio`.
+  - Unity build pipeline: `BuildPlayerOptions`, scene lists, and `MenuItem` editor scripts.
+  - Node.js for the generator, plus terminal environment variables for the API key.
+- **Follow-up:**
+  - Tune the aside volume (0.47) and low-pass (1800 Hz), and the wave and bird levels in `StoryAudio.cs`, after listening.
+  - Decide whether `Harbor2D` should become the default build scene.
+  - Delete the ElevenLabs API key that was exposed in a terminal on 12 November, and create a new one.
+  - Record the ElevenLabs plan and attribution in `AUDIO_CUES.md` before the presentation.
+
 ### Document the harbor voice direction for Programmer B
 
 - **Status:** Ready for this commit

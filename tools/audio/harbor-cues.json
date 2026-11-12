@@ -5,20 +5,20 @@
   "sfxOutputFormat": "pcm_48000",
   "voices": {
     "young": {
-      "voiceId": "10NkTYmU7tSz3Kkl3Lex",
-      "note": "Kaelen, the young worker",
+      "voiceId": "TX3LPaxmHKxFdv7VOQHJ",
+      "note": "Liam (premade, young and energetic), the young worker. Premade voices work on the free API plan.",
       "modelId": "eleven_multilingual_v2",
       "settings": {
         "stability": 0.55,
         "similarity_boost": 0.72,
         "style": 0,
         "use_speaker_boost": true,
-        "speed": 1.0
+        "speed": 1
       }
     },
     "dockworker": {
-      "voiceId": "fs2OqxduwXgp9foh2jK",
-      "note": "Callum, the dockworker",
+      "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+      "note": "Callum (premade, husky, middle-aged), the dockworker.",
       "modelId": "eleven_multilingual_v2",
       "settings": {
         "stability": 0.55,
@@ -29,8 +29,8 @@
       }
     },
     "foreman": {
-      "voiceId": "FrS6cKLB1wg4WYgPa9GW",
-      "note": "Wyatt, the harbor worker",
+      "voiceId": "iP95p4xoKVk53GoZ742B",
+      "note": "Chris (premade, charming and down-to-earth), the harbor worker.",
       "modelId": "eleven_multilingual_v2",
       "settings": {
         "stability": 0.55,
@@ -41,8 +41,8 @@
       }
     },
     "narrator": {
-      "voiceId": "8dEUmyPMdDdK91vboYih",
-      "note": "Sawyer, warm and unhurried tutorial narration",
+      "voiceId": "nPczCjzI2devNBz1zQrb",
+      "note": "Brian (premade, deep, resonant and comforting), the tutorial narrator.",
       "modelId": "eleven_multilingual_v2",
       "settings": {
         "stability": 0.62,

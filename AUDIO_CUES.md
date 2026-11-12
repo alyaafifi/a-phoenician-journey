@@ -27,19 +27,23 @@ letter puzzle and harbor. **Skip to harbor** starts the same ambience.
 | Cues | Playback |
 | --- | --- |
 | `waves`, `birds` | Separate looping tracks. Gentle wash against stone, with intermittent distant bird calls. |
-| `young-worker`, `dockworker` | Kaelen and Callum speak as the workers confer. Both lines are quieter and low-pass filtered. |
-| `foreman-aside`, `foreman-address`, `foreman-offer` | Wyatt starts with the others, then speaks clearly when addressing the player and handing over the bottle. |
-| `guide-1` through `guide-4`, `guide-facts` | Sawyer, an original ElevenLabs voice, reads the guide page and alphabet facts when they open. Navigating stops the old clip. |
+| `young-worker`, `dockworker` | Liam (young worker) and Callum (dockworker) speak as the workers confer. Both lines are quieter and low-pass filtered. |
+| `foreman-aside`, `foreman-address`, `foreman-offer` | Chris (harbor worker) starts quietly with the others, then speaks clearly when addressing the player and handing over the bottle. |
+| `guide-1` through `guide-4`, `guide-facts` | Brian, a deep and unhurried narrator, reads the guide page and alphabet facts when they open. Navigating stops the old clip. |
 
 The exact scripts, voice IDs, and effect prompts are in
 [`tools/audio/harbor-cues.json`](tools/audio/harbor-cues.json).
 Harbor files go in `unity/Assets/Resources/Audio/Harbor/`. The runtime loads
 local files and lets the player proceed with subtitles if a clip is missing.
-The harbor voice names above are the intended ElevenLabs cast. The free API plan
-rejected the selected library voices. The ten temporary macOS system-voice
-recordings are for personal local preview and stay out of the shared repository.
-The shared harbor build includes the wave and bird loops and uses subtitles for
-the harbor dialogue and tutorial until replacement speech is available.
+All five voices are ElevenLabs **premade** voices, which the free API plan can
+use. The first cast (Kaelen, Wyatt, Sawyer and a library Callum) came from the
+Voice Library, which the free plan rejects with `HTTP 402 paid_plan_required`.
+All ten harbor speech clips are generated and shared in the repository.
+
+ElevenLabs sound effects return **stereo** PCM. The generator writes a stereo WAV
+header when the returned size matches two channels. The classroom effects were
+first saved with a mono header; they are now 24 kHz stereo, which fixes the
+traffic loop playing as hiss.
 
 ## Generate or regenerate
 

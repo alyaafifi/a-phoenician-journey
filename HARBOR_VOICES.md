@@ -23,8 +23,11 @@ audience. The narrator should sound distinct from the three workers.
 ## Cue order
 
 Use the exact text and cue IDs in [harbor-cues.json](tools/audio/harbor-cues.json).
-The current voice IDs are starting choices and may need replacement if the
-generating account cannot use them.
+
+**Status (12 November 2026):** all ten speech cues are generated and shared. The
+cast uses ElevenLabs premade voices, which the free API plan allows: **Liam**
+(young worker), **Callum** (dockworker), **Chris** (harbor worker), and **Brian**
+(narrator). The steps below still apply for regenerating a line.
 
 | Cue | Delivery | Trigger and spoken content |
 | --- | --- | --- |

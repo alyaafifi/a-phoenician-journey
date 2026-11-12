@@ -12,7 +12,22 @@ namespace PhoenicianJourney.Editor
     public static class BuildScript
     {
         public const string WindowsOutput = "Builds/Windows/APhoenicianJourney.exe";
+        public const string StoryWindowsOutput = "Builds/WindowsStory/APhoenicianJourney.exe";
         public const string WebOutput = "Builds/Web";
+
+        /// <summary>The illustrated 2D story, the team's main version since 12 November 2026.</summary>
+        public const string StoryScenePath = "Assets/Scenes/Harbor2D.unity";
+
+        /// <summary>
+        /// Windows build of the 2D story (Harbor2D). The 3D harbor build below stays available.
+        /// </summary>
+        [MenuItem("Tools/Phoenician Journey/Build Windows (2D story)")]
+        public static void BuildWindowsStory()
+        {
+            ApplyCommonSettings();
+            PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+            Build(BuildTarget.StandaloneWindows64, StoryWindowsOutput, "Windows 2D story", StoryScenePath);
+        }
 
         /// <summary>
         /// Windows desktop build with the Mono backend, which ships with the editor, so it
@@ -46,11 +61,11 @@ namespace PhoenicianJourney.Editor
             PlayerSettings.companyName = "A Phoenician Journey team";
         }
 
-        private static void Build(BuildTarget target, string output, string label)
+        private static void Build(BuildTarget target, string output, string label, string scene = HarborSceneBuilder.ScenePath)
         {
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
-                scenes = new[] { HarborSceneBuilder.ScenePath },
+                scenes = new[] { scene },
                 locationPathName = output,
                 target = target,
                 options = BuildOptions.None,
