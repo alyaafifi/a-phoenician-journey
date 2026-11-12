@@ -1,6 +1,6 @@
 # Audio cues
 
-All voice lines and sound effects are generated ahead of time with [ElevenLabs](https://elevenlabs.io) and committed as files (Git LFS). The game never calls ElevenLabs while it runs. The exact prompts and settings live in cue files under `tools/audio/`, so anyone can regenerate a clip and get a matching result.
+The game plays local audio files. The shared classroom and harbor ambience clips were generated ahead of time with [ElevenLabs](https://elevenlabs.io) and are tracked with Git LFS. Prompts and settings are in the cue files under `tools/audio/`.
 
 ## Classroom (Harbor2D story)
 
@@ -18,6 +18,28 @@ The teacher drones on in a flat, slow voice while a wall clock ticks and traffic
 - **Mix (in `StoryAudio.cs`):** teacher 1.0, yawn 0.9, clock 0.35, traffic 0.2. The loops start at a random point. The fade to silence takes 2.9 s, with a low-pass filter sweeping down to 400 Hz so the room sounds muffled.
 - **Files:** `unity/Assets/Resources/Audio/Classroom/<cue>.wav` (24 kHz mono). A missing file is skipped, so the story still runs silently.
 - **Script text:** the spoken lines must match the dialogue in `HarborStory.cs`. If the text changes, update the cue file and regenerate that line.
+
+## Harbor and letter tutorial (Harbor2D story)
+
+Waves and birds start at the first opening-eye frame and continue through the
+letter puzzle and harbor. **Skip to harbor** starts the same ambience.
+
+| Cues | Playback |
+| --- | --- |
+| `waves`, `birds` | Separate looping tracks. Gentle wash against stone, with intermittent distant bird calls. |
+| `young-worker`, `dockworker` | Kaelen and Callum speak as the workers confer. Both lines are quieter and low-pass filtered. |
+| `foreman-aside`, `foreman-address`, `foreman-offer` | Wyatt starts with the others, then speaks clearly when addressing the player and handing over the bottle. |
+| `guide-1` through `guide-4`, `guide-facts` | Sawyer, an original ElevenLabs voice, reads the guide page and alphabet facts when they open. Navigating stops the old clip. |
+
+The exact scripts, voice IDs, and effect prompts are in
+[`tools/audio/harbor-cues.json`](tools/audio/harbor-cues.json).
+Harbor files go in `unity/Assets/Resources/Audio/Harbor/`. The runtime loads
+local files and lets the player proceed with subtitles if a clip is missing.
+The harbor voice names above are the intended ElevenLabs cast. The free API plan
+rejected the selected library voices. The ten temporary macOS system-voice
+recordings are for personal local preview and stay out of the shared repository.
+The shared harbor build includes the wave and bird loops and uses subtitles for
+the harbor dialogue and tutorial until replacement speech is available.
 
 ## Generate or regenerate
 
@@ -39,6 +61,7 @@ The teacher drones on in a flat, slow voice while a wall clock ticks and traffic
 
    ```
    node tools/audio/generate-elevenlabs.mjs tools/audio/classroom-cues.json
+   node tools/audio/generate-elevenlabs.mjs tools/audio/harbor-cues.json
    ```
 
 5. Open Unity, play `Harbor2D` from the title, and listen. Adjust the mix in `StoryAudio.cs` if needed.
@@ -46,3 +69,8 @@ The teacher drones on in a flat, slow voice while a wall clock ticks and traffic
 ## License
 
 The ElevenLabs plan that generated the clips sets the terms of use. The free plan requires attribution and limits commercial use. Record the plan here when the clips are generated, and credit ElevenLabs in the game or presentation if the plan requires it.
+
+Harbor wave and bird effects generated with elevenlabs.io on the free plan for
+the non-commercial prototype. See [ElevenLabs billing and usage terms](https://elevenlabs.io/docs/overview/administration/billing).
+See [Apple’s macOS license agreements](https://www.apple.com/legal/sla/) for the
+terms on system voices used in local previews.

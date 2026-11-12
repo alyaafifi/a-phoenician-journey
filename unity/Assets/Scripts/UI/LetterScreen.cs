@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PhoenicianJourney.Audio;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -44,12 +45,14 @@ namespace PhoenicianJourney.UI
         private readonly VisualElement bank = new VisualElement();
         private readonly Label feedback = new Label("Drag an English tile to its line, or select a tile and then a line.");
         private readonly Button finish;
+        private readonly StoryAudio audio;
         private int selected = -1;
         private int solved;
         private Label ghost;
 
-        public LetterScreen(VisualElement parent, Action completed)
+        public LetterScreen(VisualElement parent, Action completed, StoryAudio audio)
         {
+            this.audio = audio;
             screen.AddToClassList("letter-game");
             parent.Add(screen);
             content.AddToClassList("letter-game");
@@ -117,6 +120,7 @@ namespace PhoenicianJourney.UI
 
         private void ShowGuide(int step, Action done)
         {
+            audio.PlayHarborVoice($"guide-{step + 1}");
             (string Title, string Body, VisualElement Target, string Example) lesson = step switch
             {
                 0 => ("Read the parchment", "The parchment on the left holds the Phoenician letter. Start at the right edge of each line and read toward the left. Scroll the parchment to see more lines.", parchment, (string)null),
@@ -146,13 +150,16 @@ namespace PhoenicianJourney.UI
                 }, lesson.Target, lesson.Example, step > 0 ? () => ShowGuide(step - 1, done) : null);
         }
 
-        private void ShowFacts(string buttonText, Action next) =>
+        private void ShowFacts(string buttonText, Action next)
+        {
+            audio.PlayHarborVoice("guide-facts");
             ShowPopup("Phoenician alphabet facts", new[]
             {
                 "Twenty-two letters. They mainly represented consonants, so readers supplied most vowel sounds from context.",
                 "An ox became an A. The ancestor of the Phoenician letter alf was an ox-head sign. Greek writers adapted alf to write the vowel A.",
                 "Numbers worked like tallies. Phoenician number signs could be repeated to build larger numbers.",
             }, buttonText, next);
+        }
 
         private void ShowPopup(string title, string[] paragraphs, string buttonText, Action next,
             VisualElement highlight = null, string example = null, Action back = null)
@@ -176,6 +183,7 @@ namespace PhoenicianJourney.UI
 
             void Advance(Action action)
             {
+                audio.StopVoice();
                 backdrop.RemoveFromHierarchy();
                 highlight?.RemoveFromClassList("letter-guide-highlight");
                 content.SetEnabled(true);

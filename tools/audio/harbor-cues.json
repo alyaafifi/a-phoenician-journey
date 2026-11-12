@@ -1,0 +1,136 @@
+{
+  "description": "Harbor2D shoreline, worker dialogue, and letter tutorial narration.",
+  "outputDir": "unity/Assets/Resources/Audio/Harbor",
+  "outputFormat": "pcm_24000",
+  "sfxOutputFormat": "pcm_48000",
+  "voices": {
+    "young": {
+      "voiceId": "10NkTYmU7tSz3Kkl3Lex",
+      "note": "Kaelen, the young worker",
+      "modelId": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.55,
+        "similarity_boost": 0.72,
+        "style": 0,
+        "use_speaker_boost": true,
+        "speed": 1.0
+      }
+    },
+    "dockworker": {
+      "voiceId": "fs2OqxduwXgp9foh2jK",
+      "note": "Callum, the dockworker",
+      "modelId": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.55,
+        "similarity_boost": 0.72,
+        "style": 0,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      }
+    },
+    "foreman": {
+      "voiceId": "FrS6cKLB1wg4WYgPa9GW",
+      "note": "Wyatt, the harbor worker",
+      "modelId": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.55,
+        "similarity_boost": 0.72,
+        "style": 0,
+        "use_speaker_boost": true,
+        "speed": 0.95
+      }
+    },
+    "narrator": {
+      "voiceId": "8dEUmyPMdDdK91vboYih",
+      "note": "Sawyer, warm and unhurried tutorial narration",
+      "modelId": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.62,
+        "similarity_boost": 0.72,
+        "style": 0,
+        "use_speaker_boost": true,
+        "speed": 0.9
+      }
+    }
+  },
+  "cues": [
+    {
+      "id": "waves",
+      "type": "sfx",
+      "loop": true,
+      "durationSeconds": 16,
+      "promptInfluence": 0.65,
+      "text": "Seamless loop of small Mediterranean waves gently washing against a low stone quay and pebbled shore, soft swash and retreat, calm nearshore ambience, no voices, wind, birds, music or boats",
+      "normalizePeak": 0.7
+    },
+    {
+      "id": "birds",
+      "type": "sfx",
+      "loop": true,
+      "durationSeconds": 21,
+      "promptInfluence": 0.65,
+      "text": "Seamless quiet coastal ambience with a few natural distant seabird calls and occasional small birds chirping, generous quiet between calls, no ocean, music, or voices",
+      "normalizePeak": 0.65
+    },
+    {
+      "id": "young-worker",
+      "type": "speech",
+      "voice": "young",
+      "text": "Who’s this? Have either of you seen him before?"
+    },
+    {
+      "id": "dockworker",
+      "type": "speech",
+      "voice": "dockworker",
+      "text": "I haven’t. Where’d he come from? I didn’t see him get off a boat."
+    },
+    {
+      "id": "foreman-aside",
+      "type": "speech",
+      "voice": "foreman",
+      "text": "Well, he’s here now, and we’re short a pair of hands."
+    },
+    {
+      "id": "foreman-address",
+      "type": "speech",
+      "voice": "foreman",
+      "text": "Come on, lad. Pick a trade and get to work. The dyer’s on your left. The carpenter’s on your right."
+    },
+    {
+      "id": "foreman-offer",
+      "type": "speech",
+      "voice": "foreman",
+      "text": "And if you want to help on the ship, take this. The order tells us what goes where."
+    },
+    {
+      "id": "guide-1",
+      "type": "speech",
+      "voice": "narrator",
+      "text": "The parchment on the left holds the Phoenician letter. Start at the right edge of each line and read toward the left. Scroll the parchment to see more lines."
+    },
+    {
+      "id": "guide-2",
+      "type": "speech",
+      "voice": "narrator",
+      "text": "The alphabet key on the right pairs each Phoenician sign with its Latin equivalent. In this example, the rightmost sign is G, the middle sign is B, and the leftmost is L. Read them in that order to get G, B, L. Phoenician usually writes consonants, so the vowels are often left out."
+    },
+    {
+      "id": "guide-3",
+      "type": "speech",
+      "voice": "narrator",
+      "text": "The word references are in the Cargo glossary below the alphabet key. Find the same group of signs there. G, B, L means Byblos, so you now know the first line names the city."
+    },
+    {
+      "id": "guide-4",
+      "type": "speech",
+      "voice": "narrator",
+      "text": "The English tiles are at the bottom. When you start decoding, drag “To the crew at Byblos” to the first line’s drop box. You can also select the tile and then the box. Match all eight lines to finish."
+    },
+    {
+      "id": "guide-facts",
+      "type": "speech",
+      "voice": "narrator",
+      "text": "Twenty-two letters. They mainly represented consonants, so readers supplied most vowel sounds from context. An ox became an A. The ancestor of the Phoenician letter alf was an ox-head sign. Greek writers adapted alf to write the vowel A. Numbers worked like tallies. Phoenician number signs could be repeated to build larger numbers."
+    }
+  ]
+}

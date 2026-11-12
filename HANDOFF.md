@@ -31,6 +31,21 @@
 
 ## Entries
 
+### Prepare harbor ambience and letter narration
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-12T14:35:21+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested waves and birds, distinct harbor voices with quieter worker asides, and approved an original voice for the letter walkthrough. Project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-12T14:35:21+01:00
+- **Purpose:** Make the transition into Byblos audible and narrate the first minigame.
+- **Changes:** `StoryAudio.cs` adds wave and bird loops and separate clear and muffled voice playback. `HarborStory.cs` starts the ambience when the student begins opening his eyes and plays the worker cues. `LetterScreen.cs` starts and stops narration with its guide and facts pages. `tools/audio/harbor-cues.json` defines the twelve cues, and the cue sheet and source register document them.
+- **Decisions:** Keep subtitles and use a local-clip workflow. The intended ElevenLabs cast is Sawyer for narration and Kaelen, Callum, and Wyatt for the three workers. Keep the wave and bird loops independent from voice playback.
+- **Verification:** The isolated Unity Play Mode run passed the classroom audio and letter-flow tests. The harbor cue sheet parses as JSON and the generator passes Node's syntax check.
+- **Follow-up:** Waves and birds generated successfully. Corrected their WAV headers to preserve stereo playback at the requested 16 and 21 seconds, and updated the generator to recognize that PCM layout. ElevenLabs rejected the first Voice Library request on the free API plan. With the project user’s approval, generated ten temporary speech clips locally with macOS voices (Eddy, Rocko, Daniel, Grandpa). Verified the WAV files and Unity metadata, and launched Harbor2D at its title screen. The temporary speech stays local under Apple’s system-voice usage terms. This commit includes the two ElevenLabs ambience WAVs, with attribution in the cue sheet. Generate shareable speech when suitable ElevenLabs access is available, then review the mix in Unity.
+
 ### Add ElevenLabs classroom audio to the 2D story
 
 - **Status:** Ready for this commit

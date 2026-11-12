@@ -58,6 +58,7 @@ namespace PhoenicianJourney.UI
                 StopCoroutine(transition);
             transition = null;
             ReleaseBlurredFrame();
+            storyAudio?.StopAll();
             GetComponent<UIDocument>().rootVisualElement?.UnregisterCallback<GeometryChangedEvent>(FitFrame);
         }
 
@@ -113,6 +114,7 @@ namespace PhoenicianJourney.UI
             yield return new WaitForSecondsRealtime(1f);
             SetFrame(null);
             yield return new WaitForSecondsRealtime(0.8f);
+            storyAudio.StartHarborAmbience();
             yield return FadeWakeFrame("wake-narrow", 0.85f, 1f, 0.85f);
             yield return FadeWakeFrame("wake-wide", 1f, 0.85f, 0.4f);
             yield return FadeWakeFrame("wake", 0.65f, 0.4f, 0f);
@@ -192,30 +194,46 @@ namespace PhoenicianJourney.UI
             ShowCard("wake", "A dream of Byblos", "The teacher’s voice fades. You hear waves against stone. Three strangers lean over you.",
                 "Listen", ShowQuestion);
 
-        private void ShowQuestion() =>
+        private void ShowQuestion()
+        {
+            storyAudio.PlayHarborVoice("young-worker", aside: true);
             ShowCard("wake", "Young worker", "Who’s this? Have either of you seen him before?",
                 "Continue", ShowHelpingHand);
+        }
 
         private void ShowHelpingHand() =>
             ShowCard("helping-hand", null, null, "Take his hand", ShowReply);
 
-        private void ShowReply() =>
+        private void ShowReply()
+        {
+            storyAudio.PlayHarborVoice("dockworker", aside: true);
             ShowCard("crew", "Dockworker", "I haven’t. Where’d he come from? I didn’t see him get off a boat.",
                 "Continue", ShowInvitation);
+        }
 
-        private void ShowInvitation() =>
+        private void ShowInvitation()
+        {
+            storyAudio.PlayHarborAddress();
             ShowCard("crew", "Harbor worker",
                 "Well, he’s here now, and we’re short a pair of hands. Come on, lad. Pick a trade and get to work. The dyer’s on your left. The carpenter’s on your right.",
                 "Continue", ShowOffer);
+        }
 
-        private void ShowOffer() =>
+        private void ShowOffer()
+        {
+            storyAudio.PlayHarborVoice("foreman-offer");
             ShowCard("offer", "Harbor worker", "And if you want to help on the ship, take this. The order tells us what goes where.", "Take the bottle",
-                () => ShowCard("bottle-student", null, null, "Unseal the bottle", ShowTranslation, icon: "bottle-icon"));
+                () =>
+                {
+                    storyAudio.StopVoice();
+                    ShowCard("bottle-student", null, null, "Unseal the bottle", ShowTranslation, icon: "bottle-icon");
+                });
+        }
 
         private void ShowTranslation()
         {
             SetFrame("decode-letter");
-            new LetterScreen(controls, ShowHarbor);
+            new LetterScreen(controls, ShowHarbor, storyAudio);
         }
 
         private void ShowLetter()
@@ -226,6 +244,8 @@ namespace PhoenicianJourney.UI
 
         private void ShowHarbor()
         {
+            storyAudio.StartHarborAmbience();
+            storyAudio.StopVoice();
             SetFrame("harbor");
             var banner = new Label(trade.ShipmentSent
                 ? "Shipment sent"

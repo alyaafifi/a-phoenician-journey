@@ -13,6 +13,7 @@ namespace PhoenicianJourney.Audio
     public sealed class StoryAudio : MonoBehaviour
     {
         private const string ClassroomFolder = "Audio/Classroom/";
+        private const string HarborFolder = "Audio/Harbor/";
 
         // Relative mix for the classroom. The teacher sits on top, the room underneath.
         private const float VoiceVolume = 1f;
@@ -26,7 +27,11 @@ namespace PhoenicianJourney.Audio
         private Channel effects;
         private Channel clock;
         private Channel traffic;
+        private Channel waves;
+        private Channel birds;
         private Coroutine fade;
+        private Coroutine address;
+        private bool harborStarted;
 
         /// <summary>One AudioSource with its own low-pass filter, so it can be muffled separately.</summary>
         private sealed class Channel
@@ -59,7 +64,8 @@ namespace PhoenicianJourney.Audio
         /// <summary>The cue currently playing on the voice channel, for tests.</summary>
         public string CurrentVoice { get; private set; }
 
-        public bool AmbiencePlaying => EnsureChannels() && (clock.Source.isPlaying || traffic.Source.isPlaying);
+        public bool AmbiencePlaying => EnsureChannels() &&
+            (clock.Source.isPlaying || traffic.Source.isPlaying || waves.Source.isPlaying || birds.Source.isPlaying);
 
         private void Awake() => EnsureChannels();
 
@@ -75,6 +81,8 @@ namespace PhoenicianJourney.Audio
             effects = new Channel(transform, "Effects", loop: false) { BaseVolume = EffectVolume };
             clock = new Channel(transform, "Ambience Clock", loop: true) { BaseVolume = ClockVolume };
             traffic = new Channel(transform, "Ambience Traffic", loop: true) { BaseVolume = TrafficVolume };
+            waves = new Channel(transform, "Ambience Waves", loop: true) { BaseVolume = 0.36f };
+            birds = new Channel(transform, "Ambience Birds", loop: true) { BaseVolume = 0.18f };
             return true;
         }
 
@@ -92,14 +100,61 @@ namespace PhoenicianJourney.Audio
         {
             EnsureChannels();
             StopFade();
+            StopVoice();
+            PlayVoice(ClassroomFolder, cue, false);
+        }
+
+        public void StartHarborAmbience()
+        {
+            EnsureChannels();
+            if (harborStarted)
+                return;
+            StopAll();
+            harborStarted = true;
+            StartLoop(waves, "waves", HarborFolder);
+            StartLoop(birds, "birds", HarborFolder);
+        }
+
+        public void PlayHarborVoice(string cue, bool aside = false)
+        {
+            StopVoice();
+            PlayVoice(HarborFolder, cue, aside);
+        }
+
+        public void PlayHarborAddress()
+        {
+            PlayHarborVoice("foreman-aside", aside: true);
+            if (voice.Source.isPlaying)
+                address = StartCoroutine(ContinueAddress());
+            else
+                PlayVoice(HarborFolder, "foreman-address", false);
+        }
+
+        private IEnumerator ContinueAddress()
+        {
+            yield return new WaitWhile(() => voice.Source.isPlaying);
+            PlayVoice(HarborFolder, "foreman-address", false);
+            address = null;
+        }
+
+        public void StopVoice()
+        {
+            EnsureChannels();
+            if (address != null)
+                StopCoroutine(address);
+            address = null;
             voice.Reset();
             CurrentVoice = null;
-            var clip = Clip(cue);
-            if (clip == null)
-            {
-                return;
-            }
+        }
 
+        private void PlayVoice(string folder, string cue, bool aside)
+        {
+            var clip = Clip(cue, folder);
+            if (clip == null)
+                return;
+
+            voice.Source.volume = aside ? 0.47f : VoiceVolume;
+            voice.Filter.cutoffFrequency = aside ? 1800f : 22000f;
             voice.Source.clip = clip;
             voice.Source.Play();
             CurrentVoice = cue;
@@ -128,11 +183,13 @@ namespace PhoenicianJourney.Audio
         {
             EnsureChannels();
             StopFade();
-            voice.Reset();
+            StopVoice();
             effects.Reset();
             clock.Reset();
             traffic.Reset();
-            CurrentVoice = null;
+            waves.Reset();
+            birds.Reset();
+            harborStarted = false;
         }
 
         private void OnDisable()
@@ -143,7 +200,7 @@ namespace PhoenicianJourney.Audio
             }
         }
 
-        private void StartLoop(Channel channel, string cue)
+        private void StartLoop(Channel channel, string cue, string folder = ClassroomFolder)
         {
             if (channel.Source.isPlaying)
             {
@@ -151,7 +208,7 @@ namespace PhoenicianJourney.Audio
             }
 
             channel.Reset();
-            var clip = Clip(cue);
+            var clip = Clip(cue, folder);
             if (clip == null)
             {
                 return;
@@ -201,20 +258,21 @@ namespace PhoenicianJourney.Audio
             }
         }
 
-        private AudioClip Clip(string cue)
+        private AudioClip Clip(string cue, string folder = ClassroomFolder)
         {
-            if (clips.TryGetValue(cue, out var cached))
+            string path = folder + cue;
+            if (clips.TryGetValue(path, out var cached))
             {
                 return cached;
             }
 
-            var clip = Resources.Load<AudioClip>(ClassroomFolder + cue);
-            if (clip == null && reportedMissing.Add(cue))
+            var clip = Resources.Load<AudioClip>(path);
+            if (clip == null && reportedMissing.Add(path))
             {
                 Debug.Log($"[StoryAudio] No clip for \"{cue}\" yet. Generate it with tools/audio/generate-elevenlabs.mjs.");
             }
 
-            clips[cue] = clip;
+            clips[path] = clip;
             return clip;
         }
     }
