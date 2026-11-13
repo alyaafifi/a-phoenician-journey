@@ -31,6 +31,32 @@
 
 ## Entries
 
+### Finalize the dyeing handoff
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-13T11:34:39+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested the drag-and-dip instructions, a handoff update, and a push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-13T11:34:39+01:00
+- **Changes:** Finalizes the handoff for `f969cbe`, pushed with Git author date 2026-11-13T11:34:12+01:00. The dye stall now shows a numbered mouse guide on entry and during the dip, with the guide shown again on retry. The same commit includes the enlarged cloak, clean vat artwork, timed scoring, gold stars, and trade-loop test changes.
+- **Verification:** Two Unity Play Mode tests passed after the pull. A Harbor2D smoke test checked the opening guide, drag input, and all seven scoring bands. The trade-loop test verified cargo delivery. Manual Game view review of the new instructions remains open.
+
+### Make the purple dye stall a timed cloak dip
+
+- **Status:** Shipped in `f969cbe`
+- **Recorded at:** 2026-11-13T11:19:33+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested mouse dragging, a Phoenician-style cape, a seven-zone timing meter, retry on red, and lighter or darker purple depending on the lift time.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-13T11:34:12+01:00
+- **Changes:** `DyeScreen.cs` and `Harbor.uss` add a mouse-draggable wool cloak, vat entry and lift detection, instructions, the timing meter, and seven results. The opening instructions use the clean vat backdrop with the enlarged cloak already visible beside the basket. Three illustrated stars show the current rating in gold and hold that rating on the result. A successful result still unlocks the existing purple cloth shipment. `HarborLoopTests.cs` covers a failed dip, a successful dip, and repeat play through the trade loop.
+- **Decisions:** The five-second sweep uses a cosine easing curve with its highest speed in the center. Red, orange, yellow, and green use 24%, 14%, 9%, and 6% of the bar respectively on each applicable side. Lifting the cloak or releasing the mouse stops the meter. Reaching the end automatically fails the attempt. The cloak is a simple wool mantle inspired by the setting.
+- **Artwork:** ImageGen edited the existing vat scene to replace the hand, sleeve, and wool swatch with matching wood grain. It also generated a separate transparent sprite of a plain wool shoulder cloak with broad folds and a small bronze clasp in the same 2D style. The two assets are `dye-vat.png` and `dye-cloak.png`.
+- **Verification:** The Unity Play Mode trade loop passed, including a red result, a successful early lift, and cargo delivery. An isolated Harbor2D Play Mode smoke test used synthetic pointer events to pick up, dip, and lift the cloak and verified scores for all seven bands. A follow-up run passed both tests and checked the opening cloak layout and earned star states for every score. Manual Game view playtesting remains open.
+
 ### Add an optional Highlights toggle and tip to the letter puzzle
 
 - **Status:** Ready for this commit
@@ -71,20 +97,6 @@
   - Optionally generate a narrator line for the tip with `tools/audio/harbor-cues.json`.
   - Check the button position and the tip on the presentation display.
   - Decide whether the tip should show on every full guide replay or only the first time.
-
-### Make the purple dye stall a timed cloak dip
-
-- **Status:** Pending
-- **Recorded at:** 2026-11-13T11:19:33+01:00
-- **Work by:** Codex
-- **Requested or approved by:** Project user requested mouse dragging, a Phoenician-style cape, a seven-zone timing meter, retry on red, and lighter or darker purple depending on the lift time.
-- **Git author:** Pending
-- **Git committer:** Pending
-- **Git author date:** Pending
-- **Changes:** `DyeScreen.cs` and `Harbor.uss` add a mouse-draggable wool cloak, vat entry and lift detection, instructions, the timing meter, and seven results. The opening instructions use the clean vat backdrop with the enlarged cloak already visible beside the basket. Three illustrated stars show the current rating in gold and hold that rating on the result. A successful result still unlocks the existing purple cloth shipment. `HarborLoopTests.cs` covers a failed dip, a successful dip, and repeat play through the trade loop.
-- **Decisions:** The five-second sweep uses a cosine easing curve with its highest speed in the center. Red, orange, yellow, and green use 24%, 14%, 9%, and 6% of the bar respectively on each applicable side. Lifting the cloak or releasing the mouse stops the meter. Reaching the end automatically fails the attempt. The cloak is a simple wool mantle inspired by the setting.
-- **Artwork:** ImageGen edited the existing vat scene to replace the hand, sleeve, and wool swatch with matching wood grain. It also generated a separate transparent sprite of a plain wool shoulder cloak with broad folds and a small bronze clasp in the same 2D style. The two assets are `dye-vat.png` and `dye-cloak.png`.
-- **Verification:** The Unity Play Mode trade loop passed, including a red result, a successful early lift, and cargo delivery. An isolated Harbor2D Play Mode smoke test used synthetic pointer events to pick up, dip, and lift the cloak and verified scores for all seven bands. A follow-up run passed both tests and checked the opening cloak layout and earned star states for every score. Manual Game view playtesting remains open.
 
 ### Keep the final parchment line above the English tiles
 
