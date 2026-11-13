@@ -31,6 +31,18 @@
 
 ## Entries
 
+### Hide the rectangular hover frame on harbor minigames
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-13T12:04:39+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested removal of the rectangular hover frame while preserving the white artwork outlines and pointer, then authorized the handoff update, commit, and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-13T12:13:40+01:00
+- **Changes:** `Harbor.uss` keeps harbor hotspot borders and backgrounds transparent on hover and focus. The clickable regions, artwork highlights, and pointer rules are preserved.
+- **Verification:** Reviewed the stylesheet diff and hotspot handlers and ran `git diff --check`. Manual Game view verification remains open.
+
 ### Finalize the dyeing handoff
 
 - **Status:** Ready for this commit

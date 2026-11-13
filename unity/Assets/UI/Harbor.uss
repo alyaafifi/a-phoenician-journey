@@ -454,8 +454,8 @@
 }
 
 .story-hotspot:hover, .story-hotspot:focus {
-    background-color: rgba(39, 19, 36, 0.22);
-    border-color: #ffde9a;
+    background-color: rgba(35, 18, 32, 0);
+    border-color: rgba(255, 222, 154, 0);
 }
 
 .story-teacher {
