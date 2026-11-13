@@ -684,3 +684,70 @@
 .letter-popup-panel .letter-glyphs {
     font-size: 26px;
 }
+
+/* Highlights toggle (top left of the letter puzzle) and its tip */
+
+.letter-highlight-toggle {
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    padding: 6px 12px;
+    border-width: 2px;
+    border-color: #723453;
+    border-radius: 6px;
+    background-color: #ffe5a8;
+    color: #351e2b;
+    font-size: 14px;
+    -unity-font-style: bold;
+    transition-property: border-color, scale;
+    transition-duration: 0.25s;
+}
+
+.letter-highlight-toggle:hover {
+    background-color: #f3d79c;
+}
+
+.letter-highlights-off .letter-highlight-toggle {
+    border-color: #8a7380;
+    background-color: #d9cbb0;
+    color: #5c4a55;
+}
+
+.letter-highlights-off .letter-glossary-word {
+    background-color: rgba(0, 0, 0, 0);
+    border-bottom-width: 0;
+    color: #54232d;
+}
+
+.letter-tip {
+    background-color: rgba(21, 13, 24, 0.55);
+}
+
+.letter-tip-panel {
+    position: absolute;
+    top: 13%;
+    left: 3%;
+    width: 36%;
+    max-width: 420px;
+    overflow: visible;
+}
+
+.letter-tip-arrow {
+    position: absolute;
+    top: -8px;
+    left: 30px;
+    width: 16px;
+    height: 16px;
+    background-color: #36192b;
+    rotate: 45deg;
+}
+
+.letter-game .letter-highlight-toggle.letter-tip-target {
+    border-width: 3px;
+    border-color: #f4c878;
+}
+
+.letter-game .letter-highlight-toggle.letter-tip-pulse {
+    border-color: #fff1dd;
+    scale: 1.08 1.08;
+}

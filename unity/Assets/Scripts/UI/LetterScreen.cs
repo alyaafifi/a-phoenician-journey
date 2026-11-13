@@ -49,7 +49,10 @@ namespace PhoenicianJourney.UI
         private readonly VisualElement bank = new VisualElement();
         private readonly Label feedback = new Label("Drag an English tile to its line, or select a tile and then a line.");
         private readonly Button finish;
+        private readonly Button highlightToggle;
+        private readonly Label highlightNote = new Label();
         private readonly StoryAudio audio;
+        private bool highlightsOn = true;
         private int selected = -1;
         private int solved;
         private Label ghost;
@@ -98,7 +101,7 @@ namespace PhoenicianJourney.UI
             foreach (var entry in Glossary)
                 glossary.Add(ReferenceEntry(entry.Reading, entry.Meaning));
             reference.Add(glossary);
-            reference.Add(new Label("Highlighted words on the letter have glossary entries."));
+            reference.Add(highlightNote);
             reference.Add(new Label("Phoenician reconstruction · draft for review"));
             content.Add(reference);
 
@@ -120,7 +123,80 @@ namespace PhoenicianJourney.UI
             finish.SetEnabled(false);
             bank.Add(finish);
             content.Add(bank);
+
+            // Lets players switch the glossary highlights off for a harder puzzle. It sits outside
+            // `content`, so it stays active while the tip below points at it.
+            highlightToggle = new Button(ToggleHighlights) { name = "letter-highlight-toggle" };
+            highlightToggle.AddToClassList("letter-highlight-toggle");
+            screen.Add(highlightToggle);
+            UpdateHighlightState();
+
             ShowGuide(0, () => options.Q<Button>().Focus());
+        }
+
+        private void ToggleHighlights()
+        {
+            highlightsOn = !highlightsOn;
+            UpdateHighlightState();
+        }
+
+        private void UpdateHighlightState()
+        {
+            screen.EnableInClassList("letter-highlights-off", !highlightsOn);
+            highlightToggle.text = highlightsOn ? "Highlights: On" : "Highlights: Off";
+            highlightToggle.tooltip = highlightsOn
+                ? "Glossary words are marked on the letter. Turn off for a harder challenge."
+                : "Glossary words are not marked. Turn on for help.";
+            highlightNote.text = highlightsOn
+                ? "Highlighted words on the letter have glossary entries."
+                : "Highlights are off. Turn them on at the top left to mark glossary words.";
+        }
+
+        /// <summary>
+        /// Shown at the end of the reading guide: dims the screen, spotlights the Highlights
+        /// button with a pulsing border, and points to it from a small panel.
+        /// </summary>
+        private void ShowHighlightTip(Action done)
+        {
+            content.SetEnabled(false);
+            var backdrop = new VisualElement { name = "letter-tip" };
+            backdrop.AddToClassList("letter-game");
+            backdrop.AddToClassList("letter-tip");
+
+            var panel = new VisualElement { name = "letter-tip-panel" };
+            panel.AddToClassList("letter-popup-panel");
+            panel.AddToClassList("letter-tip-panel");
+            var arrow = new VisualElement();
+            arrow.AddToClassList("letter-tip-arrow");
+            panel.Add(arrow);
+            var heading = new Label("Tip · Highlights");
+            heading.AddToClassList("letter-popup-heading");
+            panel.Add(heading);
+            panel.Add(new Label("Words with glossary entries are marked in gold on the letter."));
+            panel.Add(new Label("Want a harder challenge? Use this button to turn the highlights off. You can turn them back on at any time."));
+
+            screen.Add(backdrop);
+            backdrop.Add(panel);
+            highlightToggle.BringToFront();
+            highlightToggle.AddToClassList("letter-tip-target");
+            var pulse = highlightToggle.schedule
+                .Execute(() => highlightToggle.ToggleInClassList("letter-tip-pulse"))
+                .Every(550);
+
+            var gotIt = new Button(() =>
+            {
+                pulse.Pause();
+                highlightToggle.RemoveFromClassList("letter-tip-target");
+                highlightToggle.RemoveFromClassList("letter-tip-pulse");
+                backdrop.RemoveFromHierarchy();
+                content.SetEnabled(true);
+                done();
+            }) { text = "Got it", name = "letter-tip-ok" };
+            var actions = new VisualElement();
+            actions.AddToClassList("letter-help");
+            actions.Add(gotIt);
+            panel.Add(actions);
+            gotIt.Focus();
         }
 
         private void ShowGuide(int step, Action done)
@@ -148,7 +224,7 @@ namespace PhoenicianJourney.UI
                         ShowFacts("Start decoding", () =>
                         {
                             reference.scrollOffset = Vector2.zero;
-                            done();
+                            ShowHighlightTip(done);
                         });
                     else
                         ShowGuide(step + 1, done);

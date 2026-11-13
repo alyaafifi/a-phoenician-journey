@@ -31,6 +31,47 @@
 
 ## Entries
 
+### Add an optional Highlights toggle and tip to the letter puzzle
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-13T12:09:03+02:00
+- **Work by:** alyaafifi (Programmer B) with Claude Code (Claude Opus 5.5)
+- **Requested or approved by:** alyaafifi asked to make the glossary highlights optional with a button at the top left, so players can choose the difficulty, and to show a tip pointing at the button and highlighting it at the end of the reading guide and facts. alyaafifi authorized the commit and push to `main`.
+- **Git author:** alyaafifi
+- **Git committer:** alyaafifi
+- **Git author date:** 2026-11-13T12:09:03+02:00
+- **Purpose:** Programmer A's glossary highlights (`fd8e41c`) make the letter puzzle easier. This lets players turn them off for a harder challenge and tells them the option exists.
+- **Changes:**
+  - `unity/Assets/Scripts/UI/LetterScreen.cs` (Programmer A's file):
+    - **The toggle:** a **Highlights: On / Off** button (`letter-highlight-toggle`) at the top left, on by default. It sits on the screen rather than in `content`, so it stays active when `content` is disabled. Turning it off adds `letter-highlights-off` to the screen and updates the glossary note.
+    - **The tip:** `ShowHighlightTip()` dims the screen, brings the button to the front with a pulsing border (class toggled every 550 ms), and shows a "Tip · Highlights" panel with a pointer arrow and **Got it**.
+    - **When the tip shows:** after **Start decoding** on the facts popup, so after the opening guide and after every full replay of **Reading guide**. Opening **Alphabet facts** on its own doesn't show it.
+  - `unity/Assets/UI/Harbor.uss` adds the toggle styles (gold when on, muted when off) and an off rule that removes the gold background and underline from `.letter-glossary-word`. It also adds the dimmed tip backdrop, the panel below the button, a rotated-square arrow, and the spotlight and pulse states.
+  - `unity/Assets/Scripts/AssemblyInfo.cs` lets the play-mode test assembly use internal classes such as `LetterScreen`.
+  - `unity/Assets/Tests/PlayMode/LetterHighlightTests.cs` adds two tests. The first checks that the tip appears only after the four guide pages and the facts, spotlights the button above the backdrop, and closes with Got it. The second checks that the toggle changes the label and screen class, and that the marks go from gold (alpha 1) to transparent and back, using the real `Harbor.uss`.
+- **Decisions:**
+  - Highlights default to on, so the puzzle plays as before unless the player chooses the harder mode.
+  - The preference isn't saved between sessions, so the next player at a shared presentation machine starts with help on.
+  - The glossary itself stays available when highlights are off; only the marks on the parchment are hidden.
+  - The tip has no narration, because there's no generated clip for it. The subtitle text carries it.
+  - The player can try the toggle while the tip is open.
+- **Verification:**
+  - Batch-mode tests with Unity 6000.6.8f1: edit-mode 24/24 and play-mode 7/7, including the two new tests.
+  - The 2D story Windows build succeeded at 138.8 MB and launched with no errors in its player log.
+  - The first run failed with exit code 198 ("No valid Unity Editor license found") because the Unity Hub sign-in had expired. It passed after alyaafifi signed in again.
+  - Gaps: the placement over the background art and the strength of the pulse were reviewed by alyaafifi in the build, not on the presentation screen size.
+- **Technical skills needed to continue this work:**
+  - UI Toolkit: building elements in code, `EnableInClassList` and `ToggleInClassList`, `BringToFront`, `schedule.Execute().Every()`, `SetEnabled` and how it greys out child elements, and USS specificity, `rotate`, `scale` and transitions.
+  - Game UX for optional difficulty settings and onboarding tips.
+  - C# assembly visibility with `InternalsVisibleTo` and assembly definitions.
+  - Unity Test Framework play-mode tests with a runtime `UIDocument` and `PanelSettings`, sending `NavigationSubmitEvent` to press buttons, and checking `resolvedStyle`.
+  - Unity licensing for batch mode (Hub sign-in and Personal license).
+- **Follow-up:**
+  - Programmer A should review the change to `LetterScreen.cs`.
+  - Optionally generate a narrator line for the tip with `tools/audio/harbor-cues.json`.
+  - Check the button position and the tip on the presentation display.
+  - Decide whether the tip should show on every full guide replay or only the first time.
+
 ### Add the student's hand-grab frame
 
 - **Status:** Ready for this commit
