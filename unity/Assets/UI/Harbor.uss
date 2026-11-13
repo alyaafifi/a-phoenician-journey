@@ -357,9 +357,8 @@
 
 .dye-screen {
     background-color: #151116;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+    align-items: center;
+    justify-content: center;
 }
 
 .story-card.dye-card {
@@ -750,4 +749,63 @@
 .letter-game .letter-highlight-toggle.letter-tip-pulse {
     border-color: #fff1dd;
     scale: 1.08 1.08;
+}
+
+
+.dye-artwork {
+    position: relative;
+    background-size: 100% 100%;
+}
+
+.dye-cloth-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.dye-cloak {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.dye-controls-guide {
+    margin-top: 8px;
+    white-space: normal;
+}
+
+.dye-meter {
+    margin-top: 6px;
+}
+
+.dye-track {
+    flex-direction: row;
+    height: 16px;
+    margin: 5px 5px 3px 5px;
+}
+
+.dye-needle {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 5px;
+    margin-left: -2px;
+    background-color: #fff8e9;
+    border-width: 1px;
+    border-color: #321929;
+}
+
+
+.dye-feedback {
+    flex-direction: row;
+    align-items: center;
+}
+
+.dye-star {
+    width: 27px;
+    height: 27px;
+    margin-right: 4px;
 }

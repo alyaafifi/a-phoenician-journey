@@ -57,23 +57,24 @@ namespace PhoenicianJourney.Tests
             var dye = game.Dye;
             Assert.That(dye.IsOpen, Is.True);
             dye.Advance();
-            dye.Advance();
+            dye.BeginDip();
+            dye.LiftCloak(); // Red: too soon
             Assert.That(TradeState.Shared.AvailableOf(ProductId.PurpleCloth), Is.Zero);
             dye.Cancel();
             Assert.That(dye.IsOpen, Is.False);
             Assert.That(TradeState.Shared.AvailableOf(ProductId.PurpleCloth), Is.Zero);
 
-            // Reopening starts a fresh swatch. Replaying the full task leaves the batch unchanged.
+            // Reopening starts with a fresh cloak. Replaying the full task leaves the batch unchanged.
             for (var attempt = 0; attempt < 2; attempt++)
             {
                 yield return null;
                 game.UseNearbyStation();
                 Assert.That(dye.IsOpen, Is.True);
                 dye.Advance(); // Examine murex
-                dye.Advance(); // Select
-                dye.Advance(); // Dip
-                dye.Advance(); // Lift
-                Assert.That(dye.IsOpen, Is.True, "Show the finished swatch before returning.");
+                dye.BeginDip();
+                yield return new WaitForSecondsRealtime(1.9f); // Inside the early yellow band
+                dye.LiftCloak();
+                Assert.That(dye.IsOpen, Is.True, "Show the finished cloak before returning.");
                 dye.Advance(); // Return
                 Assert.That(dye.IsOpen, Is.False);
                 Assert.That(TradeState.Shared.AvailableOf(ProductId.PurpleCloth), Is.EqualTo(TradeState.PreparedClothBundles));
