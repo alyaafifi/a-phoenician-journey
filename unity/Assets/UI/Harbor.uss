@@ -554,6 +554,21 @@
     min-width: 2px;
 }
 
+.letter-word {
+    flex-direction: row-reverse;
+    flex-shrink: 0;
+    margin-left: 3px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.letter-glossary-word {
+    background-color: #ffe5a8;
+    border-bottom-width: 2px;
+    border-bottom-color: #723453;
+    color: #54203d;
+}
+
 .letter-row {
     margin-bottom: 5px;
 }

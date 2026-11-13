@@ -31,6 +31,20 @@
 
 ## Entries
 
+### Highlight glossary terms on the Phoenician letter
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-13T10:48:21+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested highlights for glossary terms in the letter minigame, requested exact glossary matches, and authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-13T10:48:21+01:00
+- **Purpose:** Help players identify which words they can look up.
+- **Changes:** `LetterScreen.cs` groups the right-to-left glyphs by word and highlights matches from the existing glossary, including the exact glossary stems in four prefixed forms. The attached letters stay visible outside the highlight. `Harbor.uss` gives matches a gold background and dark underline.
+- **Verification:** The isolated Unity Play Mode test verified that every highlighted glyph sequence exactly matches a glossary entry and that the attached letter on the ship term sits outside the highlight. The test also completed the walkthrough and puzzle. Checked the working diff.
+- **Follow-up:** Review highlight contrast and line wrapping in the Unity Game view.
+
 ### Generate the harbor voice-overs and fix stereo classroom effects
 
 - **Status:** Ready for this commit

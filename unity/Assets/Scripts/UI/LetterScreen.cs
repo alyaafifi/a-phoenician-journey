@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PhoenicianJourney.Audio;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -33,6 +34,9 @@ namespace PhoenicianJourney.UI
             ("hmšlḥm", "the shipments"), ("rb", "chief"), ("hnpṭ", "the harbor"),
         };
 
+        private static readonly HashSet<string> GlossaryReadings =
+            new HashSet<string>(Glossary.Select(entry => entry.Reading), StringComparer.Ordinal);
+
         private readonly VisualElement screen = new VisualElement { name = "letter-game" };
         private readonly VisualElement content = new VisualElement();
         private readonly Font glyphFont = Resources.Load<Font>("Harbor2D/NotoSansPhoenician");
@@ -64,7 +68,7 @@ namespace PhoenicianJourney.UI
                 int line = index;
                 var row = new VisualElement();
                 row.AddToClassList("letter-row");
-                row.Add(Glyphs(Lines[line].Reading));
+                row.Add(ParchmentLine(Lines[line].Reading));
                 var slot = new Button(() => Place(selected, line)) { text = "Drop English here" };
                 slot.AddToClassList("letter-slot");
                 slots.Add(slot);
@@ -94,6 +98,7 @@ namespace PhoenicianJourney.UI
             foreach (var entry in Glossary)
                 glossary.Add(ReferenceEntry(entry.Reading, entry.Meaning));
             reference.Add(glossary);
+            reference.Add(new Label("Highlighted words on the letter have glossary entries."));
             reference.Add(new Label("Phoenician reconstruction · draft for review"));
             content.Add(reference);
 
@@ -200,6 +205,34 @@ namespace PhoenicianJourney.UI
             backdrop.Add(panel);
             screen.Add(backdrop);
             proceed.Focus();
+        }
+
+        private VisualElement ParchmentLine(string reading)
+        {
+            var line = new VisualElement();
+            line.AddToClassList("letter-glyphs");
+            foreach (string word in reading.Split(' '))
+            {
+                var wordGroup = new VisualElement();
+                wordGroup.AddToClassList("letter-word");
+                string glossaryReading = word switch
+                {
+                    "hʾny" => "ʾny",
+                    "lṣbʿ" => "ṣbʿ",
+                    "bʾḥr" => "ʾḥr",
+                    "lmlḥm" => "mlḥm",
+                    _ => word,
+                };
+                if (glossaryReading != word)
+                    wordGroup.Add(Glyphs(word.Substring(0, word.Length - glossaryReading.Length)));
+
+                var glyphs = Glyphs(glossaryReading);
+                if (GlossaryReadings.Contains(glossaryReading))
+                    glyphs.AddToClassList("letter-glossary-word");
+                wordGroup.Add(glyphs);
+                line.Add(wordGroup);
+            }
+            return line;
         }
 
         private VisualElement Glyphs(string reading)
