@@ -31,6 +31,19 @@
 
 ## Entries
 
+### Add the student's hand-grab frame
+
+- **Status:** Ready for this commit
+- **Recorded at:** 2026-11-13T10:53:04+01:00
+- **Work by:** Codex
+- **Requested or approved by:** Project user requested the missing frame from the supplied storyboard and asked to match the student's clothing across the scene. The project user authorized the commit and push.
+- **Git author:** anthonymerhy
+- **Git committer:** anthonymerhy
+- **Git author date:** 2026-11-13T10:53:04+01:00
+- **Purpose:** Show the student actually taking the worker's hand before the standing crew shot.
+- **Changes:** `HarborStory.cs` shows `hand-grab.jpg` after **Take his hand**, then **Continue** advances to the standing crew and resumes the dockworker's dialogue. The frame uses page 11 of the supplied storyboard as its base, with an ImageGen edit to match the student's dark navy sweatshirt and ribbed cuff from the bottle shot.
+- **Verification:** Inspected the original page and the wardrobe edit. An isolated Unity Play Mode smoke test passed the transition from the offered hand to the hand grab and then the standing crew. Checked the working diff.
+
 ### Highlight glossary terms on the Phoenician letter
 
 - **Status:** Ready for this commit

@@ -202,7 +202,10 @@ namespace PhoenicianJourney.UI
         }
 
         private void ShowHelpingHand() =>
-            ShowCard("helping-hand", null, null, "Take his hand", ShowReply);
+            ShowCard("helping-hand", null, null, "Take his hand", ShowHandGrab);
+
+        private void ShowHandGrab() =>
+            ShowCard("hand-grab", null, null, "Continue", ShowReply);
 
         private void ShowReply()
         {
